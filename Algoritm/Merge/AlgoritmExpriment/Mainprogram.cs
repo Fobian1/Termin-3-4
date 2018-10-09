@@ -51,10 +51,10 @@ public static class MyInsertionTest {
 
     public static void Main() {
         int[] data = ReadIntfile("smallints"); // Also try "largeints"!
-        int N = 100;    // Change to some smaller number to test on part of array.
+        int N = data.Length;    // Change to some smaller number to test on part of array.
 
         // Look at numbers before sorting, unless there are too many of them.
-        if (N <= 1000) {
+        if (N <= data.Length) {
             for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
             System.Console.Write("\n\n");
         }
@@ -64,7 +64,7 @@ public static class MyInsertionTest {
         long after = Environment.TickCount;
 
         // Look at numbers after sorting, unless there are too many of them.
-        if (N <= 1000) {
+        if (N <= data.Length) {
             for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
             System.Console.Write("\n");
         }
@@ -129,7 +129,7 @@ public static class MyInsertionTest {
 
     public static void MoveValueFromSourceToResult(List<int> list, List<int> result) {
         result.Add(list.First());
-        list.Remove(0);
+        list.RemoveAt(0);
     }
 }
 
