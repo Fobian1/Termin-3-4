@@ -12,3 +12,10 @@ C:\Users\User\source\repos\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.csprojA
 C:\Users\User\source\repos\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.csproj.CoreCompileInputs.cache
 C:\Users\User\source\repos\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.exe
 C:\Users\User\source\repos\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.pdb
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.csprojAssemblyReference.cache
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.csproj.CoreCompileInputs.cache
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.exe
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.pdb
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.exe.config
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.exe
+C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.pdb
