@@ -5,6 +5,34 @@ using System.Linq;
 
 public static class MyInsertionTest {
 
+    public static void Main() {
+        int[] data = ReadIntfile("smallints"); // Also try "largeints"!
+        int N = data.Length;    // Change to some smaller number to test on part of array.
+
+        // Look at numbers before sorting, unless there are too many of them.
+        if (N <= data.Length) {
+            for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
+            System.Console.Write("\n\n");
+        }
+        Shuffle(data, 0, data.Length - 1);
+        long before = Environment.TickCount;
+        //DoMergeSort(data);
+        QuickSort_Recursive(data, 0, data.Length - 1);
+        long after = Environment.TickCount;
+
+        // Look at numbers after sorting, unless there are too many of them.
+        if (N <= data.Length) {
+            for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
+            System.Console.Write("\n");
+        }
+
+        if (IsSorted(data, 0, N - 1)) {
+            System.Console.WriteLine((after - before) / 1000.0 + " seconds");
+        }
+        Console.WriteLine("Press Enter to exit");
+        Console.ReadLine();
+    }
+
     static void InsertionSort(int[] a, int lo, int hi) {
         //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
         //denna del av arrayen redan sorterad, så, klart!
@@ -46,40 +74,13 @@ public static class MyInsertionTest {
             for (int j = 0; j < 4; j++) { ints[i] += (bytes[i * 4 + j] & 255) << (3 - j) * 8; }
         }
         return ints;
-    }
-
-    public static void Main() {
-        int[] data = ReadIntfile("smallints"); // Also try "largeints"!
-        int N = data.Length;    // Change to some smaller number to test on part of array.
-
-        // Look at numbers before sorting, unless there are too many of them.
-        if (N <= data.Length) {
-            for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
-            System.Console.Write("\n\n");
-        }
-
-        long before = Environment.TickCount;
-        DoMergeSort(data);
-        long after = Environment.TickCount;
-
-        // Look at numbers after sorting, unless there are too many of them.
-        if (N <= data.Length) {
-            for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
-            System.Console.Write("\n");
-        }
-
-        if (IsSorted(data, 0, N - 1)) {
-            System.Console.WriteLine((after - before) / 1000.0 + " seconds");
-        }
-        Console.WriteLine("Press Enter to exit");
-        Console.ReadLine();
-    }
+    }   
 
     //Mergesort ->
-    public static void DoMergeSort(this int[] data) {
-        var sortedNumbers = MergeSort(data);
+    public static void DoMergeSort(this int[] Mergedata) {
+        var sortedNumbers = MergeSort(Mergedata);
         for (int i = 0; i < sortedNumbers.Length; i++) {
-            data[i] = sortedNumbers[i];
+            Mergedata[i] = sortedNumbers[i];
         }
     }
     private static int[] MergeSort(int[] data) {
@@ -131,39 +132,47 @@ public static class MyInsertionTest {
         list.RemoveAt(0);
     }
     //Quicksort ->
-    public static void Quicksort(IComparable[] elements, int left, int right) {
-        int i = left, j = right;
-        IComparable partitioning = elements[(left + right) / 2];
+    static int Quicksort(int[] Quickdata, int left, int right) {
+        int pivot = Quickdata[left];
+        while (true) {
+            while (Quickdata[left] < pivot)
+                left++;
 
-        while (i <= j) {
-            while (elements[i].CompareTo(partitioning) < 0) {
-                i++;
+            while (Quickdata[right] > pivot)
+                right--;
+
+            //if (left < right && Quickdata[left] == Quickdata[right])
+            //    left++;
+            if (left < right) {
+                int temp = Quickdata[right];
+                Quickdata[right] = Quickdata[left];
+                Quickdata[left] = temp;
+                left++;
+                right--;
+            } else {
+                return right;
             }
 
-            while (elements[j].CompareTo(partitioning) > 0) {
-                j--;
-            }
-
-            if (i <= j) {
-                // Swap
-                IComparable tmp = elements[i];
-                elements[i] = elements[j];
-                elements[j] = tmp;
-
-                i++;
-                j--;
-            }
-        }
-
-        // Recursive calls
-        if (left < j) {
-            Quicksort(elements, left, j);
-        }
-
-        if (i < right) {
-            Quicksort(elements, i, right);
         }
     }
 
+    static public void QuickSort_Recursive(int[] arr, int left, int right) {
+
+        // For Recusrion
+        if (left < right) {
+            int pivot = Quicksort(arr, left, right);
+            if(pivot < 2) {
+                Console.WriteLine("");
+            }
+
+            if (pivot > 1)
+                QuickSort_Recursive(arr, left, pivot - 1);
+
+            if (pivot + 1 < right)
+                QuickSort_Recursive(arr, pivot + 1, right);
+            
+        }
+        
+    }
 }
 

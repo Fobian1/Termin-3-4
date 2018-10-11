@@ -19,3 +19,10 @@ C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpr
 C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.exe.config
 C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.exe
 C:\Users\User\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.pdb
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.exe.config
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.exe
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\bin\Debug\AlgoritmExpriment.pdb
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.csprojResolveAssemblyReference.cache
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.csproj.CoreCompileInputs.cache
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.exe
+C:\Users\spellabbet\Documents\GitHub\Termin-3-4\Algoritm\Merge\AlgoritmExpriment\obj\Debug\AlgoritmExpriment.pdb
