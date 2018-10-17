@@ -1,0 +1,13 @@
+starting ...
+Status RespondedConnect   932278754
+Status Connected          932278754
+Data  PlayerConnect       932278754
+Status RespondedConnect   932279754
+Status Connected          932279754
+Data  PlayerConnect       932279754
+Data  PlayerMove          932280754
+Data  PlayerMove          932281754
+Data  PlaceWall           932282754
+Data  PlaceWall           932283754
+Data  PlayerMove          932284754
+CloseLog

@@ -1,0 +1,15 @@
+starting ...
+Status Connected          932277769
+Data  GameReadyToStart    932279770
+Data  NewTurn             932279770
+Data  PlayerMove          932280770
+Data  NewTurn             932280770
+Data  PlayerMove          932281770
+Data  NewTurn             932281770
+Data  PlaceWall           932282785
+Data  NewTurn             932282785
+Data  PlaceWall           932283785
+Data  NewTurn             932283785
+Data  PlayerMove          932284785
+Data  NewTurn             932284785
+CloseLog
