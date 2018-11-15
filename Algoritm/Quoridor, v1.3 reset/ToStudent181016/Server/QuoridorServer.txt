@@ -1,20 +1,9 @@
 starting ...
-Status RespondedConnect   1618865850
-Status Connected          1618865854
-Data  PlayerConnect       1618865855
-Status RespondedConnect   1618882476
-Status Connected          1618882477
-Data  PlayerConnect       1618882478
-Status Disconnected       1618894832
-Status RespondedConnect   1618897897
-Status Connected          1618897897
-Data  PlayerConnect       1618897899
-Status Disconnecting      1618897899
-Status Disconnected       1618898006
-Status RespondedConnect   1618899758
-Status Connected          1618899758
-Data  PlayerConnect       1618899759
-Status Disconnecting      1618899759
-Status Disconnected       1618899867
-Status Disconnected       1618923489
+Status RespondedConnect   2835921487
+Status Connected          2835921487
+Data  PlayerConnect       2835921489
+Status RespondedConnect   2835922470
+Status Connected          2835922470
+Data  PlayerConnect       2835922475
+Data  PlayerMove          2835958344
 CloseLog
