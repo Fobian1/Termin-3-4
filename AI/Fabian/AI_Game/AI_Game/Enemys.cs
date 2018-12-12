@@ -17,11 +17,11 @@ namespace AI_Game {
         Game1 game;
 
         Vector2 destination, direction, distance, enemyPos;
-        Rectangle sourceRec, enemyRec;
+        Rectangle sourceRec, enemyRec, enemyDest;
         List<Rectangle> wallRecList;
 
-        bool hitwall, moving;
-        int speed, scale, rotation, enemys;
+        bool hitWall, moving;
+        int speed, scale, rotation, enemys, newDestX, newDestY;
 
         Random rnd;
 
@@ -33,6 +33,7 @@ namespace AI_Game {
             this.enemyPos = enemyPos;
             this.wallRecList = wallRecList;
             this.enemys = enemys;
+            rnd = new Random();
 
             sourceRec = new Rectangle(37, 48, 25, 25);
 
@@ -44,12 +45,12 @@ namespace AI_Game {
         public override void Update(GameTime gameTime) {
             enemyRec.X = (int)enemyPos.X;
             enemyRec.Y = (int)enemyPos.Y;
+            Start(gameTime);
 
-            
         }
-        IEnumerator Start() {
+        IEnumerator Start(GameTime gameTime) {
             CurrentPS = PlayerStates.Patrol;
-            //Movement();
+            Movement(gameTime);
             while (true) {
                 switch (CurrentPS) {
                     case PlayerStates.Patrol:
@@ -68,51 +69,51 @@ namespace AI_Game {
 
         }
         #region FSM
-        //public void Movement(GameTime gameTime) {
-        //    int dir = rnd.Next(1, 5);
-        //    if (!moving) {
-        //        if (dir == 1) {
-        //            ChangeDirection(new Vector2(-1, 0));
-        //        } else if (dir == 2) {
-        //            ChangeDirection(new Vector2(1, 0));
-        //        } else if (dir == 3) {
-        //            ChangeDirection(new Vector2(0, -1));
-        //        } else if (dir == 4) {
-        //            ChangeDirection(new Vector2(0, 1));
-        //        }
-        //    } else {
-        //        pos += direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        //        if (Vector2.Distance(pos, destination) < 1) {
-        //            pos = destination;
-        //            moving = false;
-        //        }
-        //    }
-        //}
-        //private void ChangeDirection(Vector2 direction) {
-        //    this.direction = direction;
-        //    Vector2 newDestination = enemyPos + (this.direction * 25);
+        public void Movement(GameTime gameTime) {
+            int dir = rnd.Next(1, 5);
+            if (!moving) {
+                if (dir == 1) {
+                    ChangeDirection(new Vector2(-1, 0));
+                } else if (dir == 2) {
+                    ChangeDirection(new Vector2(1, 0));
+                } else if (dir == 3) {
+                    ChangeDirection(new Vector2(0, -1));
+                } else if (dir == 4) {
+                    ChangeDirection(new Vector2(0, 1));
+                }
+            } else {
+                pos += direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (Vector2.Distance(pos, destination) < 1) {
+                    pos = destination;
+                    moving = false;
+                }
+            }
+        }
+        private void ChangeDirection(Vector2 direction) {
+            this.direction = direction;
+            Vector2 newDestination = enemyPos + (this.direction * 25);
 
-        //    newDestX = (int)newDestination.X;
-        //    newDestY = (int)newDestination.Y;
-        //    playerDest = new Rectangle(newDestX, newDestY, 25, 25);
+            newDestX = (int)newDestination.X;
+            newDestY = (int)newDestination.Y;
+            enemyDest = new Rectangle(newDestX, newDestY, 25, 25);
 
-        //    foreach (Rectangle wallRec in wallRecList) {
-        //        if (wallRec.Intersects(playerDest)) {
-        //            hitWall = true;
-        //            break;
-        //        } else {
-        //            hitWall = false;
-        //        }
-        //    }
+            foreach (Rectangle wallRec in wallRecList) {
+                if (wallRec.Intersects(enemyDest)) {
+                    hitWall = true;
+                    break;
+                } else {
+                    hitWall = false;
+                }
+            }
 
-        //    if (!hitWall) {
-        //        destination = newDestination;
-        //        isMoving = true;
-        //    }
-        //    if (hitWall) {
-        //        isMoving = false;
-        //    }
-        //}
+            if (!hitWall) {
+                destination = newDestination;
+                moving = true;
+            }
+            if (hitWall) {
+                moving = false;
+            }
+        }
 
         public void PatrolState() {
 

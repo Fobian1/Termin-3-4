@@ -13,6 +13,7 @@ namespace AI_Game {
         Ground ground;
         Walls walls;
         Player thePlayer;
+        Enemys theEnemy;
         Enemys [] theEnemys;
 
         List<GameObjects> gameList;
@@ -66,6 +67,7 @@ namespace AI_Game {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             thePlayer = new Player(spritesheet, playerPos, wallRecList, player);
+            theEnemy = new Enemys(spritesheet, enemyPos, wallRecList, enemys);
             theEnemys = new Enemys[enemyAmount];
 
             playerPosList = posGiver(printObjects, 'p');
@@ -102,8 +104,8 @@ namespace AI_Game {
             mouseState = Mouse.GetState();
             keyState = Keyboard.GetState();
 
-            
 
+            theEnemy.Update(gameTime);
             Play(gameTime);
 
             base.Update(gameTime);
