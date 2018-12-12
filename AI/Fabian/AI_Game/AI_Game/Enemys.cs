@@ -38,6 +38,7 @@ namespace AI_Game {
             sourceRec = new Rectangle(37, 48, 25, 25);
 
             scale = 1;
+            moving = false;
             speed = 150;
             enemyRec = new Rectangle((int)enemyPos.X, (int)enemyPos.Y, 25, 25);
         }
