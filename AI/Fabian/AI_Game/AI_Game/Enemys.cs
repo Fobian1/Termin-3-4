@@ -46,13 +46,11 @@ namespace AI_Game {
         public override void Update(GameTime gameTime) {
             enemyRec.X = (int)enemyPos.X;
             enemyRec.Y = (int)enemyPos.Y;
-            Start(gameTime);
+            //Start(gameTime);
 
-        }
-        IEnumerator Start(GameTime gameTime) {
             CurrentPS = PlayerStates.Patrol;
             Movement(gameTime);
-            while (true) {
+            while (1 > 0) {
                 switch (CurrentPS) {
                     case PlayerStates.Patrol:
                         PatrolState();
@@ -67,8 +65,11 @@ namespace AI_Game {
                         break;
                 }
             }
-
         }
+        //IEnumerator Start(GameTime gameTime) {
+            
+        //}
+
         #region FSM
         public void Movement(GameTime gameTime) {
             int dir = rnd.Next(1, 5);
