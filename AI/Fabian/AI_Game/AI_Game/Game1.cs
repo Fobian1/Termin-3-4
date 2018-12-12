@@ -6,11 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace AI_Game {
-    enum PlayerStates {
-        Idle,
-        Attack,
-        Flee,
-    }
+    
     public class Game1 : Game {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -36,7 +32,6 @@ namespace AI_Game {
         
         KeyboardState keyState, oldKeyState;
         MouseState mouseState, oldMouse;
-        PlayerStates CurrentPS;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -107,19 +102,7 @@ namespace AI_Game {
             mouseState = Mouse.GetState();
             keyState = Keyboard.GetState();
 
-            switch (CurrentPS) {
-                case PlayerStates.Idle:
-                    Idle(gameTime);
-                   break;
-
-                case PlayerStates.Flee:
-
-                    break;
-
-                case PlayerStates.Attack:
-
-                    break;
-            }
+            
 
             Play(gameTime);
 
@@ -177,10 +160,6 @@ namespace AI_Game {
             IsMouseVisible = true;
             thePlayer.Update(gameTime);
             //theEnemys[enemys].Update(gameTime);
-
-        }
-
-        public void Idle(GameTime gameTime) {
 
         }
 

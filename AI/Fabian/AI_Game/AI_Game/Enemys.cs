@@ -1,27 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AI_Game {
+    public enum PlayerStates {
+        Patrol,
+        Attack,
+        Flee,
+    }
     class Enemys : GameObjects {
-        Game1 game; 
+        Game1 game;
 
         Vector2 destination, direction, distance, enemyPos;
         Rectangle sourceRec, enemyRec;
         List<Rectangle> wallRecList;
 
-        bool hitwall;
+        bool hitwall, moving;
         int speed, scale, rotation, enemys;
 
         Random rnd;
 
         SpriteEffects enemyEF = SpriteEffects.None;
+        PlayerStates CurrentPS;
 
-        public Enemys(Texture2D spritesheet, Vector2 enemyPos, List<Rectangle> wallRecList, int enemys) : base (spritesheet, enemyPos) {
+        public Enemys(Texture2D spritesheet, Vector2 enemyPos, List<Rectangle> wallRecList, int enemys) : base(spritesheet, enemyPos) {
             this.spritesheet = spritesheet;
             this.enemyPos = enemyPos;
             this.wallRecList = wallRecList;
@@ -37,9 +44,89 @@ namespace AI_Game {
         public override void Update(GameTime gameTime) {
             enemyRec.X = (int)enemyPos.X;
             enemyRec.Y = (int)enemyPos.Y;
+
+            
+        }
+        IEnumerator Start() {
+            CurrentPS = PlayerStates.Patrol;
+            //Movement();
+            while (true) {
+                switch (CurrentPS) {
+                    case PlayerStates.Patrol:
+                        PatrolState();
+                        break;
+
+                    case PlayerStates.Flee:
+                        FleeState();
+                        break;
+
+                    case PlayerStates.Attack:
+                        AttackState();
+                        break;
+                }
+            }
+
+        }
+        #region FSM
+        //public void Movement(GameTime gameTime) {
+        //    int dir = rnd.Next(1, 5);
+        //    if (!moving) {
+        //        if (dir == 1) {
+        //            ChangeDirection(new Vector2(-1, 0));
+        //        } else if (dir == 2) {
+        //            ChangeDirection(new Vector2(1, 0));
+        //        } else if (dir == 3) {
+        //            ChangeDirection(new Vector2(0, -1));
+        //        } else if (dir == 4) {
+        //            ChangeDirection(new Vector2(0, 1));
+        //        }
+        //    } else {
+        //        pos += direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        //        if (Vector2.Distance(pos, destination) < 1) {
+        //            pos = destination;
+        //            moving = false;
+        //        }
+        //    }
+        //}
+        //private void ChangeDirection(Vector2 direction) {
+        //    this.direction = direction;
+        //    Vector2 newDestination = enemyPos + (this.direction * 25);
+
+        //    newDestX = (int)newDestination.X;
+        //    newDestY = (int)newDestination.Y;
+        //    playerDest = new Rectangle(newDestX, newDestY, 25, 25);
+
+        //    foreach (Rectangle wallRec in wallRecList) {
+        //        if (wallRec.Intersects(playerDest)) {
+        //            hitWall = true;
+        //            break;
+        //        } else {
+        //            hitWall = false;
+        //        }
+        //    }
+
+        //    if (!hitWall) {
+        //        destination = newDestination;
+        //        isMoving = true;
+        //    }
+        //    if (hitWall) {
+        //        isMoving = false;
+        //    }
+        //}
+
+        public void PatrolState() {
+
         }
 
+        public void AttackState() {
 
+        }
+
+        public void FleeState() {
+
+        }
+
+        #endregion        
 
         public override void Draw(SpriteBatch sb) {
             sb.Draw(spritesheet, new Vector2(enemyPos.X + 12, enemyPos.Y + 12), sourceRec, Color.White, rotation, new Vector2(12.5f, 12.5f), scale, enemyEF, 1);

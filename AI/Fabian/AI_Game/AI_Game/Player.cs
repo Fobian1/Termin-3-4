@@ -67,7 +67,6 @@ namespace AI_Game {
                 }
             }
 
-
             oldKeyState = keyState;
             oldMouseState = mouseState;
         }
