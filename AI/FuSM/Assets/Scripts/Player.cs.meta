@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f26437d6ba2547848a9eb6abace4c612
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pointsDisplay: {instanceID: 0}
+  - healthDisplay: {instanceID: 0}
+  - enemy: {fileID: 1950642935687963545, guid: 82b94ab418e40e2498a5718d2b58d64b, type: 3}
+  - projectile: {fileID: 3384679048454022508, guid: 7cbf74bf35c87924db6cab72c2e15d02,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
