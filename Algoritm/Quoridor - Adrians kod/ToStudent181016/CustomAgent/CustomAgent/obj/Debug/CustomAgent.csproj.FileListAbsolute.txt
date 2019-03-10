@@ -42,3 +42,6 @@ C:\Users\Toro\Desktop\Stuff\Studier\2018\Quoridor\CustomAgent-master\CustomAgent
 C:\Users\Toro\Desktop\Stuff\Studier\2018\Quoridor\CustomAgent-master\CustomAgent-master\CustomAgent\obj\Debug\CustomAgent.csproj.CopyComplete
 C:\Users\Toro\Desktop\Stuff\Studier\2018\Quoridor\CustomAgent-master\CustomAgent-master\CustomAgent\obj\Debug\CustomAgent.exe
 C:\Users\Toro\Desktop\Stuff\Studier\2018\Quoridor\CustomAgent-master\CustomAgent-master\CustomAgent\obj\Debug\CustomAgent.pdb
+C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\CustomAgent\CustomAgent\bin\Debug\CustomAgent.exe.config
+C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\CustomAgent\CustomAgent\obj\Debug\CustomAgent.exe
+C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\CustomAgent\CustomAgent\obj\Debug\CustomAgent.pdb
