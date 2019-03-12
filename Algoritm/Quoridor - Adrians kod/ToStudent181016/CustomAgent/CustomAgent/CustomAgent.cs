@@ -192,8 +192,7 @@ namespace Quoridor.AI
             }
         }
 
-        void Search(Graph g, int src)
-        {
+        void Search(Graph g, int src) {
             SearchAlgorithm pathSearch = new SearchAlgorithm(graph, src);
             Stack<int>[] paths;
             Stack<int> pathToChoose = null;
