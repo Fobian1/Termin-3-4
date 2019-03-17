@@ -11,7 +11,9 @@ public static class MyInsertionTest {
 
         // Look at numbers before sorting, unless there are too many of them.
         if (N <= data.Length) {
-            for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
+            for (int i = 0; i < N; i++) {
+                //System.Console.Write(data[i] + " ");
+            }
             System.Console.Write("\n\n");
         }
         Shuffle(data, 0, data.Length - 1);
@@ -21,8 +23,10 @@ public static class MyInsertionTest {
         long after = Environment.TickCount;
 
         // Look at numbers after sorting, unless there are too many of them.
-        if (N <= data.Length) {
-            for (int i = 0; i < N; i++) { System.Console.Write(data[i] + " "); }
+        if (N <= 1000) {
+            for (int i = 0; i < N; i++) {
+                System.Console.Write(data[i] + " ");
+            }
             System.Console.Write("\n");
         }
 
@@ -70,8 +74,11 @@ public static class MyInsertionTest {
         // the standard way, but it works!)
         byte[] bytes = File.ReadAllBytes(filename);
         int[] ints = new int[bytes.Length / 4];
+
         for (int i = 0; i < ints.Length; i++) {
-            for (int j = 0; j < 4; j++) { ints[i] += (bytes[i * 4 + j] & 255) << (3 - j) * 8; }
+            for (int j = 0; j < 4; j++) {
+                ints[i] += (bytes[i * 4 + j] & 255) << (3 - j) * 8;
+            }
         }
         return ints;
     }   
