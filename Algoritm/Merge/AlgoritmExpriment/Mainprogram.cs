@@ -8,18 +8,18 @@ public static class MyInsertionTest {
     public static void Main() {
         int[] data = ReadIntfile("smallints"); // Also try "largeints"!
         int N = data.Length;    // Change to some smaller number to test on part of array.
-
         // Look at numbers before sorting, unless there are too many of them.
         if (N <= data.Length) {
             for (int i = 0; i < N; i++) {
                 //System.Console.Write(data[i] + " ");
             }
-            System.Console.Write("\n\n");
+            //System.Console.Write("\n\n");
         }
         Shuffle(data, 0, data.Length - 1);
         long before = Environment.TickCount;
-        //DoMergeSort(data);
-        QuickSort_Recursive(data, 0, data.Length - 1);
+        DoMergeSort(data);
+        //QuickSort_Recursive(data, 0, data.Length - 1);
+        //InsertionSort(data, 0, N / 2, N - 1);
         long after = Environment.TickCount;
 
         // Look at numbers after sorting, unless there are too many of them.
@@ -37,16 +37,43 @@ public static class MyInsertionTest {
         Console.ReadLine();
     }
 
-    static void InsertionSort(int[] a, int lo, int hi) {
+    static void InsertionSort(int[] a, int lo, int mid, int hi) {
         //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
         //denna del av arrayen redan sorterad, så, klart!
         for (int i = lo; i <= hi; i++) {
+
             for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
-                int x = a[j]; a[j] = a[j - 1]; a[j - 1] = x;
+                int x = a[j];
+                a[j] = a[j - 1];
+                a[j - 1] = x;
+                System.Console.WriteLine(a[j] + " ");
             }
         }
+
+        //int[] aux = a;
+        //int k = lo, j = mid + 1;
+
+        //for (int i = lo; i <= hi; i++) {
+        //    aux[i] = a[i];
+        //}
+
+        //for (int i = lo; i <= hi; i++) {
+        //    if (i > mid) {
+        //        a[i] = aux[j++];
+        //    } else if (j > hi) {
+        //        a[i] = aux[k++];
+        //    } else if (aux[j] < aux[k]) {
+        //        a[i] = aux[j++];
+        //    } else {
+        //        a[i] = aux[k++];
+        //    }
+        //    System.Console.WriteLine(a[i] + " ");
+        //}
+
     }
-    private static bool IsSorted(int[] a, int lo, int hi) {
+
+
+private static bool IsSorted(int[] a, int lo, int hi) {
         int flaws = 0;
         for (int i = lo + 1; i <= hi; i++) {
             if (a[i] < a[i - 1]) {
@@ -91,8 +118,9 @@ public static class MyInsertionTest {
         }
     }
     private static int[] MergeSort(int[] data) {
-        if (data.Length <= 1)
+        if (data.Length <= 1) {
             return data;
+        }
 
         var left = new List<int>();
         var right = new List<int>();
