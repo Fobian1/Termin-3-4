@@ -4,42 +4,37 @@ using System.Collections.Generic;
 using System.Linq;
 
 public static class MyInsertionTest {
-
     public static void Main() {
-        bool isMerge;
-
         #region data and suffle
         int[] data = ReadIntfile("smallints"); // Also try "largeints" and samllints
-        //int[] data = { 5, 2, 1, 2, 4, 5, 9, 7, 3, 2,10,10,2,3,4,1,0,0,2,1,4 };
-        //int max = Convert.ToInt32(data);
-        int N = 1000;    // Change to some smaller number to test on part of array.
+        //int dataSize = sizeof(data) / sizeof(data[0]);
+        int N = data.Length;    // Change to some smaller number to test on part of array.
         // Look at numbers before sorting, unless there are too many of them.
-        //if (N <= data.Length) {
+        if (N <= 1000) {
             for (int i = 0; i < N; i++) {
                 System.Console.Write(data[i] + " ");
             }
             System.Console.Write("\n\n");
-        //}
+        }
         //Shuffle(data, 0, data.Length - 1);
         #endregion
         //#region Merge type
         long before = Environment.TickCount;
-        SortMerge(data, 0, data.Length); //sista värdet ändrar hur lång tid det tar att sortera... är det den som bestämmer hur många tal som sorteras?
+        MergeSort(data, 0, data.Length - 1);
         //DoMergeSort(data);
         ////QuickSort_Recursive(data, 0, data.Length - 1);
-        ////InsertionSort(data, 0, N / 2, N - 1);
+        //InsertionSort(data, 0, N - 1);
         long after = Environment.TickCount;
+        //SortMerge(data, 0, data.Length);
         //#endregion
 
-        //// Look at numbers after sorting, unless there are too many of them.
-        //if (N <= 1000) {
-        //    for (int i = 0; i < N; i++) {
-        //        System.Console.Write(data[i] + " ");
-        //    }
-        //    System.Console.Write("\n");
-        //}
-
-
+        // Look at numbers after sorting, unless there are too many of them.
+        if (N <= data.Length) {
+            for (int i = 0; i < N; i++) {
+                System.Console.Write(data[i] + " ");
+            }
+            System.Console.Write("\n");
+        }
 
         if (IsSorted(data, 0, N - 1)) {
             System.Console.WriteLine((after - before) / 1000.0 + " seconds");
@@ -47,42 +42,133 @@ public static class MyInsertionTest {
         Console.WriteLine("Press Enter to exit");
         Console.ReadLine();
     }
-    #region Merge Sort
-    static public void mainMerge(int[] data, int left, int mid, int right) {
-        int[] temp = new int[data.Length+10]; //hitta vad 25 är för nummer och varför det finns
-        int i, eol, num, pos;
-        eol = (mid - 1);
-        pos = left;
-        num = (right - left + 1);
-
-        while ((left <= eol) && (mid <= right)) {
-            if (data[left] <= data[mid]) {
-                temp[pos++] = data[left++];
-            } else {
-                temp[pos++] = data[mid++];
+    static void InsertionSort(int[] a, int lo, int hi) {
+        for (int i = lo; i <= hi; i++) {
+            for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
+                int x = a[j]; a[j] = a[j - 1]; a[j - 1] = x;
             }
         }
-        while (left <= eol) {
-            temp[pos++] = data[left++];
+    }
+
+    private static bool IsSorted(int[] a, int lo, int hi) {
+        int flaws = 0;
+        for (int i = lo + 1; i <= hi; i++) {
+            if (a[i] < a[i - 1]) {
+                if (flaws++ >= 10) {
+                    System.Console.WriteLine("...");
+                    break;
+                }
+                System.Console.WriteLine("a[" + i + "] = " + a[i] + ", a[" + (i - 1) + "] = " + a[i + 1]);
+            }
         }
-        while (mid <= right) {
-            temp[pos++] = data[mid++];
-        }
-        for (i = 0; i < num; i++) {
-            data[right] = temp[right];
-            right--;
+        return flaws == 0;
+    }
+
+    public static void Shuffle(int[] a, int lo, int hi) {
+        Random rand = new Random();
+        for (int i = lo; i <= hi; i++) {
+            int r = i + rand.Next(hi + 1 - i);     // between i and hi
+            int t = a[i]; a[i] = a[r]; a[r] = t;
         }
     }
-    static public void SortMerge(int[] data, int left, int right) {
-        int mid;
-        if (right > left) {
-            mid = (right + left) / 2;
-            SortMerge(data, left, mid);
-            SortMerge(data, (mid + 1), right);
-            mainMerge(data, left, (mid + 1), right);
+
+    static int[] ReadIntfile(String filename) {
+        byte[] bytes = File.ReadAllBytes(filename);
+        int[] ints = new int[bytes.Length / 4];
+
+        for (int i = 0; i < ints.Length; i++) {
+            for (int j = 0; j < 4; j++) {
+                ints[i] += (bytes[i * 4 + j] & 255) << (3 - j) * 8;
+            }
+        }
+        return ints;
+    }
+
+    public static void Merge(int[] data, int lo, int mid, int hi) {
+        int i, j, k;
+        int n1 = mid - lo + 1;
+        int n2 = hi - mid;
+
+        int[] Lo, Hi;
+        Lo = new int[n1];
+        Hi = new int[n2];
+
+        for (i = 0; i < n1; i++) {
+            Lo[i] = data[lo + i];
+        }
+        for (j = 0; j < n2; j++) {
+            Hi[j] = data[mid + 1 + j];
+        }
+        i = 0;
+        j = 0;
+        k = lo;
+
+        while (i < n1 && j < n2) {
+            if (Lo[i] <= Hi[j]) {
+                data[k] = Lo[i];
+                i++;
+            }
+            else {
+                data[k] = Hi[j];
+                j++;
+            }
+            k++;
+        }
+        while (i < n1) {
+            data[k] = Lo[i];
+            i++;
+            k++;
+        }
+        while (j < n2) {
+            data[k] = Hi[j];
+            j++;
+            k++;
         }
     }
-    #endregion
+    public static void MergeSort(int[] data, int lo, int hi) {
+        if (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            MergeSort(data, lo, mid);
+            MergeSort(data, mid + 1, hi);
+            Merge(data, lo, mid, hi);
+        }
+    }
+    //#region Merge Sort
+    //static public void mainMerge(int[] data, int left, int mid, int right) {
+    //    int[] temp = new int[data.Length+10]; //hitta vad 25 är för nummer och varför det finns
+    //    int i, eol, num, pos;
+    //    eol = (mid - 1);
+    //    pos = left;
+    //    num = (right - left + 1);
+
+    //    while ((left <= eol) && (mid <= right)) {
+    //        if (data[left] <= data[mid]) {
+    //            temp[pos++] = data[left++];
+    //        } else {
+    //            temp[pos++] = data[mid++];
+    //        }
+    //    }
+    //    while (left <= eol) {
+    //        temp[pos++] = data[left++];
+    //    }
+    //    while (mid <= right) {
+    //        temp[pos++] = data[mid++];
+    //    }
+    //    for (i = 0; i < num; i++) {
+    //        data[right] = temp[right];
+    //        right--;
+    //    }
+    //}
+    //static public void SortMerge(int[] data, int left, int right) {
+    //    int mid;
+    //    if (right > left) {
+    //        mid = (right + left) / 2;
+    //        SortMerge(data, left, mid);
+    //        SortMerge(data, (mid + 1), right);
+    //        mainMerge(data, left, (mid + 1), right);
+    //    }
+    //}
+    //#endregion
     //    static void InsertionSort(int[] a, int lo, int mid, int hi) {
     //        //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
     //        //denna del av arrayen redan sorterad, så, klart!
@@ -118,21 +204,6 @@ public static class MyInsertionTest {
 
     //    }
 
-
-    private static bool IsSorted(int[] a, int lo, int hi) {
-        int flaws = 0;
-        for (int i = lo + 1; i <= hi; i++) {
-            if (a[i] < a[i - 1]) {
-                if (flaws++ >= 10) {
-                    System.Console.WriteLine("...");
-                    break;
-                }
-                System.Console.WriteLine("a[" + i + "] = " + a[i] + ", a[" + (i - 1) + "] = " + a[i + 1]);
-            }
-        }
-        return flaws == 0;
-    }
-
     //    // Shuffles the first n elements of a.
     //public static void Shuffle(int[] a, int lo, int hi) {
     //    Random rand = new Random();
@@ -141,21 +212,6 @@ public static class MyInsertionTest {
     //        int t = a[i]; a[i] = a[r]; a[r] = t;
     //    }
     //}
-
-    static int[] ReadIntfile(String filename) {
-        // Read file into a byte array, and then combine every group of four bytes to an int. (Not
-        // the standard way, but it works!)
-        byte[] bytes = File.ReadAllBytes(filename);
-        int[] ints = new int[bytes.Length / 4];
-
-        for (int i = 0; i < ints.Length; i++) {
-            for (int j = 0; j < 4; j++) {
-                ints[i] += (bytes[i * 4 + j] & 255) << (3 - j) * 8;
-            }
-        }
-        return ints;
-    }
-
     //    //Mergesort ->
     //    public static void DoMergeSort(this int[] Mergedata) {
     //        var sortedNumbers = MergeSort(Mergedata);
