@@ -16,20 +16,19 @@ public static class MyInsertionTest {
             }
             System.Console.Write("\n\n");
         }
-        //Shuffle(data, 0, data.Length - 1);
+        Shuffle(data, 0, data.Length - 1);
         #endregion
         //#region Merge type
         long before = Environment.TickCount;
-        MergeSort(data, 0, data.Length - 1);
-        //DoMergeSort(data);
+        //MergeSort(data, 0, data.Length - 1);
+        QuickSort(data, 0, data.Length - 1);
         ////QuickSort_Recursive(data, 0, data.Length - 1);
         //InsertionSort(data, 0, N - 1);
         long after = Environment.TickCount;
-        //SortMerge(data, 0, data.Length);
         //#endregion
 
         // Look at numbers after sorting, unless there are too many of them.
-        if (N <= data.Length) {
+        if (N <= 1000) {
             for (int i = 0; i < N; i++) {
                 System.Console.Write(data[i] + " ");
             }
@@ -84,6 +83,7 @@ public static class MyInsertionTest {
         return ints;
     }
 
+    #region MergeSort
     public static void Merge(int[] data, int lo, int mid, int hi) {
         int i, j, k;
         int n1 = mid - lo + 1;
@@ -133,42 +133,36 @@ public static class MyInsertionTest {
             Merge(data, lo, mid, hi);
         }
     }
-    //#region Merge Sort
-    //static public void mainMerge(int[] data, int left, int mid, int right) {
-    //    int[] temp = new int[data.Length+10]; //hitta vad 25 är för nummer och varför det finns
-    //    int i, eol, num, pos;
-    //    eol = (mid - 1);
-    //    pos = left;
-    //    num = (right - left + 1);
+    #endregion
 
-    //    while ((left <= eol) && (mid <= right)) {
-    //        if (data[left] <= data[mid]) {
-    //            temp[pos++] = data[left++];
-    //        } else {
-    //            temp[pos++] = data[mid++];
-    //        }
-    //    }
-    //    while (left <= eol) {
-    //        temp[pos++] = data[left++];
-    //    }
-    //    while (mid <= right) {
-    //        temp[pos++] = data[mid++];
-    //    }
-    //    for (i = 0; i < num; i++) {
-    //        data[right] = temp[right];
-    //        right--;
-    //    }
-    //}
-    //static public void SortMerge(int[] data, int left, int right) {
-    //    int mid;
-    //    if (right > left) {
-    //        mid = (right + left) / 2;
-    //        SortMerge(data, left, mid);
-    //        SortMerge(data, (mid + 1), right);
-    //        mainMerge(data, left, (mid + 1), right);
-    //    }
-    //}
-    //#endregion
+    #region QuickSort
+    public static int Partition (int[] data, int lo, int hi) {
+        int pivot = data[hi];
+        int i = (lo - 1);
+        for (int j = lo; j < hi; j++) {
+            if (data[j] <= pivot) {
+                i++;
+                int temp = data[i];
+                data[i] = data[j];
+                data[j] = temp;
+            }
+        }
+        int temp1 = data[i + 1];
+        data[i + 1] = data[hi];
+        data[hi] = temp1;
+
+        return (i + 1);
+    }
+
+    public static void QuickSort(int[] data, int lo, int hi) {
+        if (lo < hi) {
+            int pi = Partition(data, lo, hi);
+
+            QuickSort(data, lo, pi - 1);
+            QuickSort(data, pi + 1, hi);
+        }
+    }
+    #endregion
     //    static void InsertionSort(int[] a, int lo, int mid, int hi) {
     //        //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
     //        //denna del av arrayen redan sorterad, så, klart!
