@@ -7,10 +7,11 @@ public static class MyInsertionTest {
     public static void Main() {
         #region data and suffle
         int[] data = ReadIntfile("smallints"); // Also try "largeints" and samllints
+        //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
         //int dataSize = sizeof(data) / sizeof(data[0]);
-        int N = data.Length;    // Change to some smaller number to test on part of array.
+        int N = 1000;    // Change to some smaller number to test on part of array.
         // Look at numbers before sorting, unless there are too many of them.
-        if (N <= 1000) {
+        if (N <= data.Length) {
             for (int i = 0; i < N; i++) {
                 System.Console.Write(data[i] + " ");
             }
@@ -28,7 +29,7 @@ public static class MyInsertionTest {
         //#endregion
 
         // Look at numbers after sorting, unless there are too many of them.
-        if (N <= 1000) {
+        if (N <= data.Length) {
             for (int i = 0; i < N; i++) {
                 System.Console.Write(data[i] + " ");
             }
@@ -155,6 +156,9 @@ public static class MyInsertionTest {
     }
 
     public static void QuickSort(int[] data, int lo, int hi) {
+        if (lo == 0 && hi == 0) {
+            Console.WriteLine("Test");
+        }
         if (lo < hi) {
             int pi = Partition(data, lo, hi);
 
