@@ -26,13 +26,12 @@ public static class MyInsertionTest {
             Console.WriteLine("Amount of zeroes: " + zeroCounter);
             System.Console.Write("\n\n");
         }
-        Shuffle(data, 0, N - 1);
+        //Shuffle(data, 0, N-1);
         #endregion
-
+       
         long before = Environment.TickCount;
         //InsertionSort(data, 0, data.Length - 1);
         //MergeSort(data, 0, data.Length - 1);
-        //QuickSort(data, 0, (793000), counter);
         QuickSort(data, 0, N - 1);
         //QuickSort_Recursive(data, 0, data.Length - 1);
 
@@ -149,28 +148,27 @@ public static class MyInsertionTest {
     #region QuickSort
     public static int Partition(int[] data, int lo, int hi) {
         int pivot = data[hi];
-        int i = (lo - 1);
-
+        int i = lo - 1;
         for (int j = lo; j < hi; j++) {
-            if (data[j] <= pivot) {
-                i++;
+            if (data[j] < pivot) {
                 int temp = data[i];
                 data[i] = data[j];
                 data[j] = temp;
+                i++;
             }
         }
         int temp1 = data[i + 1];
         data[i + 1] = pivot;
-        data[hi] = temp1;
+        pivot = temp1;
 
-        return (i + 1);
+        return i;
     }
 
     public static void QuickSort(int[] data, int lo, int hi) {
         if (lo < hi) {
             int pi = Partition(data, lo, hi);
-            QuickSort(data, lo, (pi - 1));
-            QuickSort(data, (pi + 1), hi);
+            QuickSort(data, lo, pi - 1);
+            QuickSort(data, pi + 1, hi);
         }
     }
 
@@ -233,7 +231,6 @@ public static class MyInsertionTest {
     //}
     #endregion
 
-    #region InsertionSort
     static void InsertionSort(int[] a, int lo, int mid, int hi) {
         //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
         //denna del av arrayen redan sorterad, så, klart!
@@ -247,9 +244,8 @@ public static class MyInsertionTest {
             }
         }
     }
-    #endregion
 
-
+   
     //    public static void MoveValueFromSourceToResult(List<int> list, List<int> result) {
     //        result.Add(list.First());
     //        list.RemoveAt(0);

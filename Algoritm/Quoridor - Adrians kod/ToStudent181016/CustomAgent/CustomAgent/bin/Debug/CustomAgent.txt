@@ -1,3 +1,0 @@
-starting ...
-Status Disconnected       15276891394
-CloseLog

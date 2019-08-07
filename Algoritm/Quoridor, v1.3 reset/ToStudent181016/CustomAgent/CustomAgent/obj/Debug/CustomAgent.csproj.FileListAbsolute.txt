@@ -62,3 +62,6 @@ C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\Custo
 C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\CustomAgent\CustomAgent\bin\Debug\SharpDX.XAudio2.dll
 C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\CustomAgent\CustomAgent\bin\Debug\SharpDX.XInput.dll
 C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor - Adrians kod\ToStudent181016\CustomAgent\CustomAgent\obj\Debug\CustomAgent.csprojResolveAssemblyReference.cache
+C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor, v1.3 reset\ToStudent181016\CustomAgent\CustomAgent\bin\Debug\CustomAgent.exe.config
+C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor, v1.3 reset\ToStudent181016\CustomAgent\CustomAgent\obj\Debug\CustomAgent.exe
+C:\Users\Flugan\Termin-3-4\Algoritm\Quoridor, v1.3 reset\ToStudent181016\CustomAgent\CustomAgent\obj\Debug\CustomAgent.pdb
