@@ -10,8 +10,8 @@ public static class MyInsertionTest {
         
         int counter = 0;
         #region data and suffle
-        int []data = ReadIntfile("smallints"); // Also try "largeints" and smallints
-        //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
+        int[] data = ReadIntfile("smallints"); // Also try "largeints" and smallints
+        //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 0, 0, 0, 0,1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
         int N = data.Length;    // Change to some smaller number to test on part of array.
                          // Look at numbers before sorting, unless there are too many of them.
         int zeroCounter = 0;
@@ -26,27 +26,27 @@ public static class MyInsertionTest {
             Console.WriteLine("Amount of zeroes: " + zeroCounter);
             System.Console.Write("\n\n");
         }
-        Shuffle(data, 0, N - 1);
+        //Shuffle(data, 0, N - 1);
         #endregion
 
         long before = Environment.TickCount;
         //InsertionSort(data, 0, data.Length - 1);
-        //MergeSort(data, 0, data.Length - 1);
-        //QuickSort(data, 0, (793000), counter);
+        //MergeSort(data, 0, N - 1);
+        //QuickSort(data, 0, (794000));
         QuickSort(data, 0, N - 1);
         //QuickSort_Recursive(data, 0, data.Length - 1);
 
         long after = Environment.TickCount;
 
         // Look at numbers after sorting, unless there are too many of them.
-        if (N <= 1000) {
-            for (int i = 0; i < data.Length; i++) {
+        if (N <= data.Length) {
+            for (int i = 0; i < N - 1; i++) {
                 System.Console.Write(data[i] + " ");
             }
             //System.Console.Write("\n");
         }
 
-        if (IsSorted(data, 0, N - 1)) {
+        if (IsSorted(data, 0, N-1)) {
             System.Console.WriteLine((after - before) / 1000.0 + " seconds");
         }
         Console.WriteLine("Press Enter to exit");
@@ -147,21 +147,33 @@ public static class MyInsertionTest {
     #endregion
 
     #region QuickSort
-    public static int Partition(int[] data, int lo, int hi) {
-        int pivot = data[hi];
+    public static int Partition(int[] arr, int lo, int hi) {
+        int pivot = arr[hi];
         int i = (lo - 1);
+        int j = lo;
 
-        for (int j = lo; j < hi; j++) {
-            if (data[j] <= pivot) {
+        //for (int j = lo; j < hi; j++) {
+        //    if (arr[j] <= pivot) {
+        //        i++;
+        //        int temp = arr[i];
+        //        arr[i] = arr[j];
+        //        arr[j] = temp;
+        //    }
+        //}
+
+        do {
+            if (arr[j] <= pivot) {
                 i++;
-                int temp = data[i];
-                data[i] = data[j];
-                data[j] = temp;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
             }
-        }
-        int temp1 = data[i + 1];
-        data[i + 1] = pivot;
-        data[hi] = temp1;
+            j++;
+        } while (j < hi);
+
+        int temp1 = arr[i + 1];
+        arr[i + 1] = pivot;
+        arr[hi] = temp1;
 
         return (i + 1);
     }
