@@ -150,52 +150,6 @@ public static class MyInsertionTest {
     #endregion
 
     #region QuickSort
-    public static int Partition(int[] arr, int lo, int hi) {
-        int pivot = arr[lo];
-        int j = lo;
-
-        //for (int j = lo; j < hi; j++) {
-        //    if (arr[j] <= pivot) {
-        //        i++;
-        //        int temp = arr[i];
-        //        arr[i] = arr[j];
-        //        arr[j] = temp;
-        //    }
-        //}
-        for (int i = lo + 1; i < hi; i++) {
-            if (arr[i] < pivot) {
-                j++;
-                int temp = arr[j];
-                arr[j] = arr[i];
-                arr[i] = temp;
-            }
-        }
-
-        //do {
-        //    if (arr[j] <= pivot) {
-        //        i++;
-        //        int temp = arr[i];
-        //        arr[i] = arr[j];
-        //        arr[j] = temp;
-        //    }
-        //    j++;
-        //} while (j < hi);
-
-        int temp1 = arr[j];
-        arr[j] = arr[lo];
-        arr[lo] = temp1;
-
-        return (j + 1);
-    }
-
-    //public static void QuickSort(int[] data, int lo, int hi) {
-    //    if (lo < hi) {
-    //        int pi = Partition(data, lo, hi);
-    //        if (lo < )
-    //        QuickSort(data, lo, (pi - 1));
-    //        QuickSort(data, (pi + 1), hi);
-    //    }
-    //}
     public static void QuickSort(int[] data, int lo, int hi) {
         int i = lo;
         int j = hi;
@@ -203,13 +157,13 @@ public static class MyInsertionTest {
         int pivot = data[lo + (hi - lo) / 2];
 
         while (i <= j) {
-            while (data[i] < pivot) {
+            while (data[i] < pivot) { //Kör här sålänge talet till vänster är mindre än pivot
                 i++;
             }
-            while (data[j] > pivot) {
+            while (data[j] > pivot) { //Kör här sålänge talet till höger är större än pivot
                 j--;
             }
-            if (i <= j) {
+            if (i <= j) { //När det har hittats ett tal som är mindre på vänster och större till höger byter de plats
                 int temp = data[j];
                 data[j] = data[i];
                 data[i] = temp;
@@ -217,73 +171,13 @@ public static class MyInsertionTest {
                 j--;
             }
         }
-        if (lo < j) {
+        if (lo < j) { //Kör denna sålänge höger räknaren inte är lägre än minsta möjliga
             QuickSort(data, lo, j);
         }
-        if(i < hi) {
+        if (i < hi) { //Kör denna såläng vänster räknaren inte är större än högsta möjliga
             QuickSort(data, i, hi);
         }
     }
-
-
-
-    //public static void QuickSort(int[] data, int lo, int hi) {
-    //    int i = lo;
-    //    int j = hi;
-    //    var pivot = data[hi];
-
-    //    while (i <= j) {
-    //        while (data[i] < pivot) {
-    //            i++;
-    //        }
-    //        while (data[j] > pivot) {
-    //            j--;
-    //        }
-    //        if (i <= j) {
-    //            var tmp = data[i];
-    //            data[i] = data[j];
-    //            data[j] = tmp;
-
-    //            i++;
-    //            j--;
-    //        }
-    //    }
-    //    if (lo < j) {
-    //        QuickSort(data, lo, i);
-    //    }
-    //    if (i <  hi) {
-    //        QuickSort(data, i, hi);
-    //    }
-    //}
-
-
-    //public static void QuickSort(int[] data, int size) {
-    //    if (size < 2) {
-    //        return;
-    //    }
-    //    Random rand = new Random();
-    //    int pivot, lo, hi;
-    //    lo = 0;
-    //    hi = size - 1;
-    //    pivot = data[rand.Next(size)];
-    //    while (lo <= hi) {
-    //        while (data[lo] < pivot) {
-    //            lo++;
-    //        }
-    //        while (data[hi] > pivot) {
-    //            hi--;
-    //        }
-    //        if (lo <= hi) {
-    //            int temp = data[lo];
-    //            data[lo] = data[hi];
-    //            data[hi] = temp;
-    //            lo++;
-    //            hi--;
-    //        }
-    //    }
-    //    QuickSort(data, hi++);
-    //    QuickSort(data, size - lo);
-    //}
     #endregion
 
     #region InsertionSort
