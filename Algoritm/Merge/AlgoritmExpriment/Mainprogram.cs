@@ -4,20 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 
 public static class MyInsertionTest {
-    
+
 
     public static void Main() {
-        
+
         int counter = 0;
         #region data and suffle
-        int[] data = ReadIntfile("smallints"); // Also try "largeints" and smallints
+        int[] data = ReadIntfile("largeints"); // Also try "largeints" and smallints
         //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 0, 0, 0, 0,1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
         int N = data.Length;    // Change to some smaller number to test on part of array.
-                         // Look at numbers before sorting, unless there are too many of them.
+        int M = 100;
+        // Look at numbers before sorting, unless there are too many of them.
         int zeroCounter = 0;
         if (N <= 1000) {
             for (int i = 0; i < data.Length; i++) {
-                if(data[i] == 0) {
+                if (data[i] == 0) {
                     //Console.WriteLine("i = " + i);
                     zeroCounter++;
                 }
@@ -26,41 +27,44 @@ public static class MyInsertionTest {
             Console.WriteLine("Amount of zeroes: " + zeroCounter);
             System.Console.Write("\n\n");
         }
-        //Shuffle(data, 0, N - 1);
+        Shuffle(data, 0, N - 1);
         #endregion
 
         long before = Environment.TickCount;
-        //InsertionSort(data, 0, data.Length - 1);
+
         //MergeSort(data, 0, N - 1);
         //QuickSort(data, 0, (794000));
-        QuickSort(data, 0, N - 1);
+        QuickSort(data, 0, N-1);
+        //InsertionSort(data, 0, N - 1);
         //QuickSort_Recursive(data, 0, data.Length - 1);
 
         long after = Environment.TickCount;
 
         // Look at numbers after sorting, unless there are too many of them.
-        if (N <= data.Length) {
+        if (N <= 1000) {
             for (int i = 0; i < N - 1; i++) {
                 System.Console.Write(data[i] + " ");
             }
             //System.Console.Write("\n");
         }
 
-        if (IsSorted(data, 0, N-1)) {
+        if (IsSorted(data, 0, N - 1)) {
             System.Console.WriteLine((after - before) / 1000.0 + " seconds");
         }
         Console.WriteLine("Press Enter to exit");
         Console.ReadLine();
     }
-    static void InsertionSort(int []a, int lo, int hi) {
+    static void InsertionSort(int[] a, int lo, int hi) {
         for (int i = lo; i <= hi; i++) {
             for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
-                int x = a[j]; a[j] = a[j - 1]; a[j - 1] = x;
+                int x = a[j];
+                a[j] = a[j - 1];
+                a[j - 1] = x;
             }
         }
     }
 
-    private static bool IsSorted(int []a, int lo, int hi) {
+    private static bool IsSorted(int[] a, int lo, int hi) {
         int flaws = 0;
         for (int i = lo + 1; i <= hi; i++) {
             if (a[i] < a[i - 1]) {
@@ -118,8 +122,7 @@ public static class MyInsertionTest {
             if (Lo[i] <= Hi[j]) {
                 data[k] = Lo[i];
                 i++;
-            }
-            else {
+            } else {
                 data[k] = Hi[j];
                 j++;
             }
@@ -148,8 +151,7 @@ public static class MyInsertionTest {
 
     #region QuickSort
     public static int Partition(int[] arr, int lo, int hi) {
-        int pivot = arr[hi];
-        int i = (lo - 1);
+        int pivot = arr[lo];
         int j = lo;
 
         //for (int j = lo; j < hi; j++) {
@@ -160,31 +162,70 @@ public static class MyInsertionTest {
         //        arr[j] = temp;
         //    }
         //}
-
-        do {
-            if (arr[j] <= pivot) {
-                i++;
-                int temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
+        for (int i = lo + 1; i < hi; i++) {
+            if (arr[i] < pivot) {
+                j++;
+                int temp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = temp;
             }
-            j++;
-        } while (j < hi);
+        }
 
-        int temp1 = arr[i + 1];
-        arr[i + 1] = pivot;
-        arr[hi] = temp1;
+        //do {
+        //    if (arr[j] <= pivot) {
+        //        i++;
+        //        int temp = arr[i];
+        //        arr[i] = arr[j];
+        //        arr[j] = temp;
+        //    }
+        //    j++;
+        //} while (j < hi);
 
-        return (i + 1);
+        int temp1 = arr[j];
+        arr[j] = arr[lo];
+        arr[lo] = temp1;
+
+        return (j + 1);
     }
 
+    //public static void QuickSort(int[] data, int lo, int hi) {
+    //    if (lo < hi) {
+    //        int pi = Partition(data, lo, hi);
+    //        if (lo < )
+    //        QuickSort(data, lo, (pi - 1));
+    //        QuickSort(data, (pi + 1), hi);
+    //    }
+    //}
     public static void QuickSort(int[] data, int lo, int hi) {
-        if (lo < hi) {
-            int pi = Partition(data, lo, hi);
-            QuickSort(data, lo, (pi - 1));
-            QuickSort(data, (pi + 1), hi);
+        int i = lo;
+        int j = hi;
+
+        int pivot = data[lo + (hi - lo) / 2];
+
+        while (i <= j) {
+            while (data[i] < pivot) {
+                i++;
+            }
+            while (data[j] > pivot) {
+                j--;
+            }
+            if (i <= j) {
+                int temp = data[j];
+                data[j] = data[i];
+                data[i] = temp;
+                i++;
+                j--;
+            }
+        }
+        if (lo < j) {
+            QuickSort(data, lo, j);
+        }
+        if(i < hi) {
+            QuickSort(data, i, hi);
         }
     }
+
+
 
     //public static void QuickSort(int[] data, int lo, int hi) {
     //    int i = lo;
@@ -247,65 +288,66 @@ public static class MyInsertionTest {
 
     #region InsertionSort
     static void InsertionSort(int[] a, int lo, int mid, int hi) {
-        //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
-        //denna del av arrayen redan sorterad, så, klart!
-        for (int i = lo; i <= hi; i++) {
+            //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
+            //denna del av arrayen redan sorterad, så, klart!
+            for (int i = lo; i <= hi; i++) {
 
-            for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
-                int x = a[j];
-                a[j] = a[j - 1];
-                a[j - 1] = x;
-                System.Console.WriteLine(a[j] + " ");
+                for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
+                    int x = a[j];
+                    a[j] = a[j - 1];
+                    a[j - 1] = x;
+                    System.Console.WriteLine(a[j] + " ");
+                }
             }
         }
-    }
     #endregion
 
 
-    //    public static void MoveValueFromSourceToResult(List<int> list, List<int> result) {
-    //        result.Add(list.First());
-    //        list.RemoveAt(0);
-    //    }
-    //    //Quicksort ->
-    //    static int Quicksort(int[] Quickdata, int left, int right) {
-    //        int pivot = Quickdata[left];
-    //        while (true) {
-    //            while (Quickdata[left] < pivot)
-    //                left++;
+        //    public static void MoveValueFromSourceToResult(List<int> list, List<int> result) {
+        //        result.Add(list.First());
+        //        list.RemoveAt(0);
+        //    }
+        //    //Quicksort ->
+        //    static int Quicksort(int[] Quickdata, int left, int right) {
+        //        int pivot = Quickdata[left];
+        //        while (true) {
+        //            while (Quickdata[left] < pivot)
+        //                left++;
 
-    //            while (Quickdata[right] > pivot)
-    //                right--;
+        //            while (Quickdata[right] > pivot)
+        //                right--;
 
-    //            //if (left < right && Quickdata[left] == Quickdata[right])
-    //            //    left++;
-    //            if (left < right) {
-    //                int temp = Quickdata[right];
-    //                Quickdata[right] = Quickdata[left];
-    //                Quickdata[left] = temp;
-    //                left++;
-    //                right--;
-    //            } else {
-    //                return right;
-    //            }
+        //            //if (left < right && Quickdata[left] == Quickdata[right])
+        //            //    left++;
+        //            if (left < right) {
+        //                int temp = Quickdata[right];
+        //                Quickdata[right] = Quickdata[left];
+        //                Quickdata[left] = temp;
+        //                left++;
+        //                right--;
+        //            } else {
+        //                return right;
+        //            }
 
-    //        }
-    //    }
+        //        }
+        //    }
 
-    //    static public void QuickSort_Recursive(int[] arr, int left, int right) {
+        //    static public void QuickSort_Recursive(int[] arr, int left, int right) {
 
-    //        // For Recusrion
-    //        if (left < right) {
-    //            int pivot = Quicksort(arr, left, right);
-    //            if(pivot < 2) {
-    //                Console.WriteLine("");
-    //            }
+        //        // For Recusrion
+        //        if (left < right) {
+        //            int pivot = Quicksort(arr, left, right);
+        //            if(pivot < 2) {
+        //                Console.WriteLine("");
+        //            }
 
-    //            if (pivot > 1)
-    //                QuickSort_Recursive(arr, left, pivot - 1);
+        //            if (pivot > 1)
+        //                QuickSort_Recursive(arr, left, pivot - 1);
 
-    //            if (pivot + 1 < right)
-    //                QuickSort_Recursive(arr, pivot + 1, right);
+        //            if (pivot + 1 < right)
+        //                QuickSort_Recursive(arr, pivot + 1, right);
 
-    //        }
-}
+        //        }
+    }
+
 
