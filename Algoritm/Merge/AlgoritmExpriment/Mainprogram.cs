@@ -34,8 +34,8 @@ public static class MyInsertionTest {
         while (M < N) {
             long before = Environment.TickCount;
 
-            MergeSort(data, 0, N - 1);
-            //QuickSort(data, 0, N - 1);
+            //MergeSort(data, 0, N - 1);
+            QuickSort(data, 0, N - 1);
             //InsertionSort(data, 0, N - 1);
 
             long after = Environment.TickCount;
@@ -44,6 +44,7 @@ public static class MyInsertionTest {
             }
             M *= 2;
             data = ReadIntfile("largeints");
+            //Shuffle(data, 0, N - 1);
         }
         
 
