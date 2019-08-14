@@ -5,6 +5,7 @@ using System.Linq;
 
 public static class MyInsertionTest {
 
+    static int M = 10;
 
     public static void Main() {
 
@@ -13,7 +14,7 @@ public static class MyInsertionTest {
         int[] data = ReadIntfile("largeints"); // Also try "largeints" and smallints
         //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 0, 0, 0, 0,1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
         int N = data.Length;    // Change to some smaller number to test on part of array.
-        int M = 100;
+        
         // Look at numbers before sorting, unless there are too many of them.
         int zeroCounter = 0;
         if (N <= 1000) {
@@ -33,10 +34,8 @@ public static class MyInsertionTest {
         long before = Environment.TickCount;
 
         //MergeSort(data, 0, N - 1);
-        //QuickSort(data, 0, (794000));
-        QuickSort(data, 0, N-1);
+        QuickSort(data, 0, N - 1);
         //InsertionSort(data, 0, N - 1);
-        //QuickSort_Recursive(data, 0, data.Length - 1);
 
         long after = Environment.TickCount;
 
@@ -53,15 +52,6 @@ public static class MyInsertionTest {
         }
         Console.WriteLine("Press Enter to exit");
         Console.ReadLine();
-    }
-    static void InsertionSort(int[] a, int lo, int hi) {
-        for (int i = lo; i <= hi; i++) {
-            for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
-                int x = a[j];
-                a[j] = a[j - 1];
-                a[j - 1] = x;
-            }
-        }
     }
 
     private static bool IsSorted(int[] a, int lo, int hi) {
@@ -140,11 +130,31 @@ public static class MyInsertionTest {
         }
     }
     public static void MergeSort(int[] data, int lo, int hi) {
-        if (lo < hi) {
+        if (hi - lo <= M) {
+            InsertionSort(data, lo, hi);
+        } else {
             int mid = lo + (hi - lo) / 2;
             MergeSort(data, lo, mid);
             MergeSort(data, mid + 1, hi);
             Merge(data, lo, mid, hi);
+        }
+        //if (lo < hi) {
+        //    int mid = lo + (hi - lo) / 2;
+        //    MergeSort(data, lo, mid);
+        //    MergeSort(data, mid + 1, hi);
+        //    Merge(data, lo, mid, hi);
+        //}
+    }
+    #endregion
+
+    #region InsertionSort
+    static void InsertionSort(int[] a, int lo, int hi) {
+        for (int i = lo; i <= hi; i++) {
+            for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
+                int x = a[j];
+                a[j] = a[j - 1];
+                a[j - 1] = x;
+            }
         }
     }
     #endregion
@@ -171,29 +181,23 @@ public static class MyInsertionTest {
                 j--;
             }
         }
-        if (lo < j) { //Kör denna sålänge höger räknaren inte är lägre än minsta möjliga
-            QuickSort(data, lo, j);
+        if (hi - lo <= M) {
+            InsertionSort(data, lo, hi);
+        } else {
+            if (lo < j) { //Kör denna sålänge höger räknaren inte är lägre än minsta möjliga
+                QuickSort(data, lo, j);
+            }
+            if (i < hi) { //Kör denna såläng vänster räknaren inte är större än högsta möjliga
+                QuickSort(data, i, hi);
+            }
         }
-        if (i < hi) { //Kör denna såläng vänster räknaren inte är större än högsta möjliga
-            QuickSort(data, i, hi);
-        }
+
+        
     }
     #endregion
 
     #region InsertionSort
-    static void InsertionSort(int[] a, int lo, int mid, int hi) {
-            //Pukt1: Om hi inte är större än lo har vi högst ett element och då är
-            //denna del av arrayen redan sorterad, så, klart!
-            for (int i = lo; i <= hi; i++) {
-
-                for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
-                    int x = a[j];
-                    a[j] = a[j - 1];
-                    a[j - 1] = x;
-                    System.Console.WriteLine(a[j] + " ");
-                }
-            }
-        }
+    
     #endregion
 
 
