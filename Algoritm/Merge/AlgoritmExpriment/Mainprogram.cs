@@ -5,7 +5,7 @@ using System.Linq;
 
 public static class MyInsertionTest {
 
-    static int M = 10;
+    static int M = 2;
 
     public static void Main() {
 
@@ -28,16 +28,24 @@ public static class MyInsertionTest {
             Console.WriteLine("Amount of zeroes: " + zeroCounter);
             System.Console.Write("\n\n");
         }
-        Shuffle(data, 0, N - 1);
+        //Shuffle(data, 0, N - 1);
         #endregion
 
-        long before = Environment.TickCount;
+        while (M < N) {
+            long before = Environment.TickCount;
 
-        //MergeSort(data, 0, N - 1);
-        QuickSort(data, 0, N - 1);
-        //InsertionSort(data, 0, N - 1);
+            MergeSort(data, 0, N - 1);
+            //QuickSort(data, 0, N - 1);
+            //InsertionSort(data, 0, N - 1);
 
-        long after = Environment.TickCount;
+            long after = Environment.TickCount;
+            if (IsSorted(data, 0, N - 1)) {
+                System.Console.WriteLine("\nM = "+M+" tid: "+(after - before) / 1000.0 + " seconds");
+            }
+            M *= 2;
+            data = ReadIntfile("largeints");
+        }
+        
 
         // Look at numbers after sorting, unless there are too many of them.
         if (N <= 1000) {
@@ -47,9 +55,7 @@ public static class MyInsertionTest {
             //System.Console.Write("\n");
         }
 
-        if (IsSorted(data, 0, N - 1)) {
-            System.Console.WriteLine((after - before) / 1000.0 + " seconds");
-        }
+        
         Console.WriteLine("Press Enter to exit");
         Console.ReadLine();
     }
