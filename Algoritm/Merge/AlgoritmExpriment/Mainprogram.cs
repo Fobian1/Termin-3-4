@@ -10,10 +10,11 @@ public static class MyInsertionTest {
     public static void Main() {
 
         int counter = 0;
+        long mTime = 0;
         #region data and suffle
         int[] data = ReadIntfile("largeints"); // Also try "largeints" and smallints
         //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 0, 0, 0, 0,1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
-        int N = data.Length;    // Change to some smaller number to test on part of array.
+        int N = (data.Length/2);    // Change to some smaller number to test on part of array.
         
         // Look at numbers before sorting, unless there are too many of them.
         int zeroCounter = 0;
@@ -28,23 +29,30 @@ public static class MyInsertionTest {
             Console.WriteLine("Amount of zeroes: " + zeroCounter);
             System.Console.Write("\n\n");
         }
-        //Shuffle(data, 0, N - 1);
+        Shuffle(data, 0, N - 1);
         #endregion
 
         while (M < N) {
-            long before = Environment.TickCount;
+            for (int i = 0; i < 10; i++) {
+                long before = Environment.TickCount;
+                //MergeSort(data, 0, N - 1);
+                QuickSort(data, 0, N - 1);
+                //InsertionSort(data, 0, N - 1);
+                long after = Environment.TickCount;
+                if (IsSorted(data, 0, N - 1)) {
+                    //System.Console.WriteLine("M = " + M + " tid: " + (after - before) / 1000.0 + " seconds");
+                }
+                mTime += (after - before);
+                data = ReadIntfile("largeints");
+                Shuffle(data, 0, N - 1);
 
-            //MergeSort(data, 0, N - 1);
-            QuickSort(data, 0, N - 1);
-            //InsertionSort(data, 0, N - 1);
-
-            long after = Environment.TickCount;
-            if (IsSorted(data, 0, N - 1)) {
-                System.Console.WriteLine("\nM = "+M+" tid: "+(after - before) / 1000.0 + " seconds");
             }
+            mTime /= 10;
+            System.Console.WriteLine("\nM = " + M + " Medeltiden: " + mTime / 1000.0 + " seconds\n");
+
+
             M *= 2;
-            data = ReadIntfile("largeints");
-            //Shuffle(data, 0, N - 1);
+            
         }
         
 

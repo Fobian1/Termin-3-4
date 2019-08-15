@@ -1,3 +1,4 @@
 starting ...
-Status Disconnected       15276891394
-CloseLog
+Status Connected          27055564448
+Data  GameReadyToStart    27055566280
+Data  NewTurn             27055566280
