@@ -7,64 +7,53 @@ public static class MyInsertionTest {
 
     static int M = 2;
 
-    public static void Main() {
+    /* Kommentarer om koden:
+     * Shuffle och data behöver man ändra på på två ställen
+     * Data ändras på rad 19 samt på rad 42
+     * Shuffle ändras på rad 28 samt rad 43
+     * Ändra storlek på N görs på rad 20
+     */
 
-        int counter = 0;
-        long mTime = 0;
+    public static void Main() {
         #region data and suffle
         int[] data = ReadIntfile("largeints"); // Also try "largeints" and smallints
-        //int[] data = { 0, 10, 7, 8, 9, 1, 5, 0, 0, 0, 0, 0, 0,1, 2, 3, 10, 9, 0, 100, 1, 0, 0, 100, 0 };
-        int N = (data.Length/2);    // Change to some smaller number to test on part of array.
+        int N = (data.Length);    // Change to some smaller number to test on part of array.
+        int mTime = 0; //Snitt tiden
         
-        // Look at numbers before sorting, unless there are too many of them.
-        int zeroCounter = 0;
-        if (N <= 1000) {
+        if (N <= 1000) { // Look at numbers before sorting, unless there are too many of them.
             for (int i = 0; i < data.Length; i++) {
-                if (data[i] == 0) {
-                    //Console.WriteLine("i = " + i);
-                    zeroCounter++;
-                }
-                //System.Console.Write(data[i] + " ");
+                System.Console.Write(data[i] + " ");
             }
-            Console.WriteLine("Amount of zeroes: " + zeroCounter);
-            System.Console.Write("\n\n");
         }
-        Shuffle(data, 0, N - 1);
+        //Shuffle(data, 0, N - 1); //Missa inte att aktivera båda shuffles den andra finns på rad 40
         #endregion
 
-        while (M < N) {
-            for (int i = 0; i < 10; i++) {
+        while (M < N) { //Används för att skriva ut körtiden för alla olika M
+            for (int i = 0; i < 10; i++) { //Finns för att hitta snitt-tiden vet att ha det som 10 är fult och borde ha skapat en variable för det
                 long before = Environment.TickCount;
-                //MergeSort(data, 0, N - 1);
-                QuickSort(data, 0, N - 1);
+                MergeSort(data, 0, N - 1);
+                //QuickSort(data, 0, N - 1);
                 //InsertionSort(data, 0, N - 1);
                 long after = Environment.TickCount;
                 if (IsSorted(data, 0, N - 1)) {
-                    //System.Console.WriteLine("M = " + M + " tid: " + (after - before) / 1000.0 + " seconds");
+                    System.Console.WriteLine("M = " + M + " tid: " + (after - before) / 1000.0 + " seconds");
                 }
-                mTime += (after - before);
-                data = ReadIntfile("largeints");
-                Shuffle(data, 0, N - 1);
+                mTime += (int)(after - before);
+                data = ReadIntfile("largeints"); //Hade varit snyggare att ha en int[] unSorted som får värde tidigt och endast sätter värdet och inget annat
+                //Shuffle(data, 0, N - 1);
 
             }
-            mTime /= 10;
+            mTime /= 10; //Fixar fram snitt tiden för att skrivas ut 
             System.Console.WriteLine("\nM = " + M + " Medeltiden: " + mTime / 1000.0 + " seconds\n");
-
-
+            mTime = 0;
             M *= 2;
-            
         }
-        
-
-        // Look at numbers after sorting, unless there are too many of them.
-        if (N <= 1000) {
+        if (N <= 1000) { // Look at numbers after sorting, unless there are too many of them.
             for (int i = 0; i < N - 1; i++) {
                 System.Console.Write(data[i] + " ");
             }
-            //System.Console.Write("\n");
+            System.Console.Write("\n");
         }
-
-        
         Console.WriteLine("Press Enter to exit");
         Console.ReadLine();
     }
@@ -153,12 +142,6 @@ public static class MyInsertionTest {
             MergeSort(data, mid + 1, hi);
             Merge(data, lo, mid, hi);
         }
-        //if (lo < hi) {
-        //    int mid = lo + (hi - lo) / 2;
-        //    MergeSort(data, lo, mid);
-        //    MergeSort(data, mid + 1, hi);
-        //    Merge(data, lo, mid, hi);
-        //}
     }
     #endregion
 
@@ -206,61 +189,8 @@ public static class MyInsertionTest {
                 QuickSort(data, i, hi);
             }
         }
-
-        
     }
     #endregion
-
-    #region InsertionSort
-    
-    #endregion
-
-
-        //    public static void MoveValueFromSourceToResult(List<int> list, List<int> result) {
-        //        result.Add(list.First());
-        //        list.RemoveAt(0);
-        //    }
-        //    //Quicksort ->
-        //    static int Quicksort(int[] Quickdata, int left, int right) {
-        //        int pivot = Quickdata[left];
-        //        while (true) {
-        //            while (Quickdata[left] < pivot)
-        //                left++;
-
-        //            while (Quickdata[right] > pivot)
-        //                right--;
-
-        //            //if (left < right && Quickdata[left] == Quickdata[right])
-        //            //    left++;
-        //            if (left < right) {
-        //                int temp = Quickdata[right];
-        //                Quickdata[right] = Quickdata[left];
-        //                Quickdata[left] = temp;
-        //                left++;
-        //                right--;
-        //            } else {
-        //                return right;
-        //            }
-
-        //        }
-        //    }
-
-        //    static public void QuickSort_Recursive(int[] arr, int left, int right) {
-
-        //        // For Recusrion
-        //        if (left < right) {
-        //            int pivot = Quicksort(arr, left, right);
-        //            if(pivot < 2) {
-        //                Console.WriteLine("");
-        //            }
-
-        //            if (pivot > 1)
-        //                QuickSort_Recursive(arr, left, pivot - 1);
-
-        //            if (pivot + 1 < right)
-        //                QuickSort_Recursive(arr, pivot + 1, right);
-
-        //        }
-    }
+}
 
 
