@@ -5,7 +5,7 @@ using System.Linq;
 
 public static class MyInsertionTest {
 
-    static int M = 2;
+    static int M = 0;
 
     /* Kommentarer om koden:
      * Shuffle och data behöver man ändra på på två ställen
@@ -17,7 +17,7 @@ public static class MyInsertionTest {
     public static void Main() {
         #region data and suffle
         int[] data = ReadIntfile("largeints"); // Also try "largeints" and smallints
-        int N = (data.Length);    // Change to some smaller number to test on part of array.
+        int N = (data.Length)/2;    // Change to some smaller number to test on part of array.
         int mTime = 0; //Snitt tiden
         
         if (N <= 1000) { // Look at numbers before sorting, unless there are too many of them.
@@ -46,7 +46,7 @@ public static class MyInsertionTest {
             mTime /= 10; //Fixar fram snitt tiden för att skrivas ut 
             System.Console.WriteLine("\nM = " + M + " Medeltiden: " + mTime / 1000.0 + " seconds\n");
             mTime = 0;
-            M *= 2;
+            //M *= 2;
         }
         if (N <= 1000) { // Look at numbers after sorting, unless there are too many of them.
             for (int i = 0; i < N - 1; i++) {
