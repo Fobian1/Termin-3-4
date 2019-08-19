@@ -105,6 +105,7 @@ namespace Quoridor.AI {
         }
 
         private bool LegalWall(GameData status) {
+            nextPlayer1DPos = enemy.Position.Y * tiles.GetLength(0) + enemy.Position.X;
             //if (wallX >= 0 && (wallX + 1) <= tiles.GetLength(0) - 1 && wallY >= 0 && (wallY + 1) <= tiles.GetLength(1) - 1) { // nya muren kommer vara inanför spelet
             if (isVertical) { //Den ska vara vertikal
                 for (int i = (wallY - 1); i <= (wallY + 1); i++) {
@@ -121,6 +122,16 @@ namespace Quoridor.AI {
                         wallY--; //Den krockar med en horizontel mur
                         return false;
                     }
+                }
+                CreateGraph(status, enemy);
+                graph.RemoveEdge(wallX, wallY);
+                graph.RemoveEdge(wallX, wallY + 1);
+                enemyPath = Search(graph, nextPlayer1DPos);
+                if (enemyPath != null) {
+                    return true;
+                } else {
+                    wallY--;
+                    return false;
                 }
             } else {
                 for (int i = (wallX - 1); i <= (wallX + 1); i++) {
@@ -142,9 +153,18 @@ namespace Quoridor.AI {
                         return false;
                     }
                 }
+                CreateGraph(status, enemy);
+                graph.RemoveEdge(wallX, wallY);
+                graph.RemoveEdge(wallX + 1, wallY);
+                enemyPath = Search(graph, nextPlayer1DPos);
+                if (enemyPath != null) {
+                    return true;
+                } else {
+                    wallX--;
+                    return false;
+                }
             }
-            //Något sätt att se att den nya muren inte blockar ALLA vägar
-            return true;
+            
         }
 
         void CreateGraph(GameData status, Player nextPlayer) {
