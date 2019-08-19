@@ -6,33 +6,20 @@ using System.Threading.Tasks;
 
 namespace Quoridor.AI {
     class Graph {
-        private int v;
-        private int e;
-        public int[,] adjMatrix;
+        private int v; //antal vertices
+        private int e; //antal edges
+        private List<int>[] adj; //närliggande lists
+        
 
-        private Tile[,] tiles;
-        private List<int>[] adj;
-        private int[] vertices;
-        private Player player;
-
-        public int V { get { return v; } }
-        public int E { get { return e; } }
-        public List<int> Adj(int v) { return adj[v]; } //Get adjacent vertex
-
-        public Graph(Tile[,] tiles, Player player) {
-            v = tiles.Length;
-            this.player = player;
-            //adjMatrix = new int[v, v];
-            adj = new List<int>[v];
-            for (int i = 0; i < v; i++) {
-                adj[i] = new List<int>();
+        public Graph(int V, Tile[,] tiles) {
+            this.v = V;
+            this.e = 0;
+            adj = new List<int>[V];
+            for (int v = 0; v < V; v++) {
+                adj[v] = new List<int>();
             }
 
-            vertices = new int[v];
-
             for (int i = 0; i < v; i++) {
-                vertices[i] = i;
-
                 if (!((i + 1) % tiles.GetLength(0) == 0)) {
                     AddEdge(i, i + 1);
                 }
@@ -47,19 +34,21 @@ namespace Quoridor.AI {
                 }
             }
         }
-        public void AddEdge(int src, int dest) {
-            //adjMatrix[src - 1, dest - 1] = 1;
 
-            adj[src].Add(dest);
+        public int V { get { return v; } }
+        public int E { get { return e; } }
+        public List<int> Adj(int v) { return adj[v]; }
+
+        public void AddEdge(int v, int w) {
+            adj[v].Add(w); //Lägger till w till v's lista
+            //adj[w].Add(v); //Lägger till v till w's lista
             //e++;
         }
-        public void RemoveEdge(int src, int dest) {
-            //adjMatrix[src - 1, dest - 1] = 0;
 
-            if (adj[src].Contains(dest)) {
-                adj[src].Remove(dest);
-                adj[dest].Remove(src);
-                //e--;
+        public void RemoveEdge(int v, int w) {
+            if(adj[v].Contains(w)) {
+                adj[v].Remove(w);
+                adj[w].Remove(v);
                 //e--;
             }
         }

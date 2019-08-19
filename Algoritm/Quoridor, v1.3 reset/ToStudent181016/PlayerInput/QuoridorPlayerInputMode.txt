@@ -1,7 +1,30 @@
 starting ...
-Status Connected          2835921452
-Data  GameReadyToStart    2835922486
-Data  NewTurn             2835922495
-Data  PlayerMove          2835958348
-Data  NewTurn             2835958351
-CloseLog
+Status Connected          27403838848
+Data  GameReadyToStart    27403840525
+Data  NewTurn             27403840708
+Data  PlayerMove          27403856689
+Data  NewTurn             27403856690
+Data  PlayerMove          27403856806
+Data  NewTurn             27403856806
+Data  PlayerMove          27403858891
+Data  NewTurn             27403858892
+Data  PlayerMove          27403858989
+Data  NewTurn             27403858989
+Data  PlayerMove          27403859973
+Data  NewTurn             27403859973
+Data  PlaceWall           27403860089
+Data  NewTurn             27403860104
+Data  PlayerMove          27403862057
+Data  NewTurn             27403862057
+Data  PlayerMove          27403862157
+Data  NewTurn             27403862157
+Data  PlayerMove          27403866756
+Data  NewTurn             27403866756
+Data  PlaceWall           27403866873
+Data  NewTurn             27403866873
+Data  PlayerMove          27403867856
+Data  NewTurn             27403867856
+Data  PlaceWall           27403867956
+Data  NewTurn             27403867980
+Data  PlayerMove          27403870040
+Data  NewTurn             27403870040

@@ -9,62 +9,147 @@ namespace Quoridor.AI {
         Graph graph;
         Tile[,] tiles;
         Tuple<int, int> nextCoordinates = null;
-        int current1DPos, goal;
-        Action move;
-
+        int current1DPos, nextPlayer1DPos, goal, playerWalls, enemyWalls, wallX, wallY, yOff, xDim, yDim;
+        Action move, placeWall;
+        Stack<int> playerPath, enemyPath;
+        Point enemyPos;
+        Player enemy, player;
         GameData data;
-        List<MoveAction> moves = new List<MoveAction>();
-        List<List<Node>> paths = new List<List<Node>>();
-        int goalPosition;
-        int optimalDirection;
-        int enemyWalls = 1000;
-        int distanceToGoal;
-        int distanceFromStart;
+        bool placingWall, isVertical;
 
         public static void Main() {
-            
             new CustomAgent().Start();
-            
         }
 
         public override Action DoAction(GameData status) {
             tiles = status.Tiles;
-            CreateGraph(status);
-            current1DPos = Get1DFrom2D(status.Self.Position);
-            Search(graph, current1DPos);
+            player = status.Self;
+            xDim = tiles.GetLength(0);
+            yDim = tiles.GetLength(1);
+
+            if (status.Players[0] == player) {
+                enemy = status.Players[1];
+            } else {
+                enemy = status.Players[0];
+            }
+
+            foreach (Player currentPlayer in status.Players) { //Får info om spelarna
+                current1DPos = currentPlayer.Position.Y * tiles.GetLength(0) + currentPlayer.Position.X;
+                
+                if (currentPlayer.Color == Color.Blue) {
+                    goal = tiles.Length - xDim;
+                    yOff = 0;
+                }
+                else {
+                    goal = 0;
+                    yOff = -1;
+                }
+
+                if (currentPlayer == player) { //Spelaren
+                    nextPlayer1DPos = enemy.Position.Y * tiles.GetLength(0) + enemy.Position.X;
+                    CreateGraph(status, enemy);
+                    RemoveEdge(nextPlayer1DPos);
+                    playerWalls = currentPlayer.NumberOfWalls;
+                    playerPath = Search(graph, current1DPos);
+                }
+                else { //Motståndaren
+                    CreateGraph(status, player);
+                    enemyPos = currentPlayer.Position;
+                    enemyWalls = currentPlayer.NumberOfWalls;
+                    enemyPath = Search(graph, current1DPos);
+                }
+            }
+            if(playerPath != null) {
+                if (enemyPath.Count <= playerPath.Count && enemyPath.Count <= 4) { //Fienden har en närmare väg!
+                    if (playerWalls > 0) {
+                        placingWall = true;
+                        ConvertToMove(enemyPath);
+                        wallX = nextCoordinates.Item2;
+                        wallY = nextCoordinates.Item1;
+
+                        while (placingWall) {
+                            if (enemyPos.Y == nextCoordinates.Item1) { //fienden ska rör sig i X-riktning
+                                isVertical = true;
+                                if (LegalWall(status)) {
+                                    Console.WriteLine("Next wall is on (" + wallX + ", " + wallY + "). The wall is: Vertical");
+
+                                    placeWall = new PlaceWallAction(wallX, wallY, WallOrientation.Vertical);
+                                    return placeWall;
+                                }
+                                if (wallY < (nextCoordinates.Item1 + 1)) {
+                                    placingWall = false; //Muren är onödig
+                                }
+                            } else { //fienden ska röra sig i Y riktning
+                                isVertical = false;
+                                if (LegalWall(status)) {
+                                    Console.WriteLine("Next wall is on (" + wallX + ", " + wallY + "). The wall is: Horizontal");
+                                    placeWall = new PlaceWallAction(wallX, wallY, WallOrientation.Horizontal);
+                                    return placeWall;
+                                }
+                                if (wallX < (nextCoordinates.Item2 - 1)) {
+                                    placingWall = false; //Muren är onödig
+                                }
+                            }
+                        }
+                    }
+                }
+                ConvertToMove(playerPath);
+            } else {
+                Stall();
+            }
 
             move = new MoveAction(nextCoordinates.Item2, nextCoordinates.Item1);
-            Console.WriteLine("Next move is to " + nextCoordinates.Item2.ToString() + ", " +
-            nextCoordinates.Item1.ToString() + " tile " + Get1DFrom2D(new Point(nextCoordinates.Item2, nextCoordinates.Item1)));
-
+            //Console.WriteLine("Next move is to " + nextCoordinates.Item2.ToString() + ", " +
+            //nextCoordinates.Item1.ToString() + " tile " + Get1DFrom2D(new Point(nextCoordinates.Item2, nextCoordinates.Item1)));
             return move;
+        }
 
-            moves.RemoveAt(0);
-            data = status;
-            GetGoal(status);
-            foreach (Player p in status.Players) {
-                if (p != status.Self) {
-                    if (p.NumberOfWalls < enemyWalls) {
-                        if (goalPosition == 0) {
-                            Point p1 = new Point(data.Tiles.GetLength(0) / 2, data.Tiles.GetLength(1));
-                            Point p2 = new Point(data.Self.Position.X, data.Self.Position.Y);
-                            distanceFromStart = (p1.X - p2.X) + (p1.Y - p2.Y);
-
-                        } else {
-                            distanceToGoal = data.Self.Position.Y;
+        private bool LegalWall(GameData status) {
+            //if (wallX >= 0 && (wallX + 1) <= tiles.GetLength(0) - 1 && wallY >= 0 && (wallY + 1) <= tiles.GetLength(1) - 1) { // nya muren kommer vara inanför spelet
+            if (isVertical) { //Den ska vara vertikal
+                for (int i = (wallY - 1); i <= (wallY + 1); i++) {
+                    Console.WriteLine("Place wall on [" + wallX + ", " + i + "]");
+                    if (i >= 0 && i <= tiles.GetLength(1)) {
+                        if (status.VerticalWall[wallX, i]) {
+                            wallY--; //Den krockar med en vertical mur
+                            return false;
                         }
+                    }
+                }
+                if (wallY > 0 && wallX > 0) {
+                    if (status.HorizontalWall[wallX - 1, wallY - 1]) {
+                        wallY--; //Den krockar med en horizontel mur
+                        return false;
+                    }
+                }
+            } else {
+                for (int i = (wallX - 1); i <= (wallX + 1); i++) {
+                    Console.WriteLine("i = " + i);
+                    if (i >= 0 && i <= xDim) {
+                        Console.WriteLine("Place wall on ["+i+", "+wallY+"]");
+                        if (status.HorizontalWall[i, wallY]) {
+                            
+                            wallX--; //Den krockar med en horizontel mur
+                            Console.WriteLine("New wallX: " + wallX);
+                            return false;
+                        }
+                    }
 
-                        enemyWalls = p.NumberOfWalls;
-                        moves.Clear();
-                        FindPath(status.Self.Position);
+                }
+                if (wallY > 0 && wallX > 0) {
+                    if (status.VerticalWall[wallX - 1, wallY - 1]) {
+                        wallX--; //Den krockar med en vertical mur
+                        return false;
                     }
                 }
             }
-            return moves[0];
+            //Något sätt att se att den nya muren inte blockar ALLA vägar
+            return true;
         }
 
-        void CreateGraph(GameData status) {
-            graph = new Graph(tiles, status.Self);
+        void CreateGraph(GameData status, Player nextPlayer) {
+            graph = new Graph(tiles.Length, tiles);
+
             for (int i = 0; i < status.HorizontalWall.Length; i++) {
                 Tuple<int, int> index = Get2DFrom1D(i, status.Tiles.GetLength(1),
                     status.Tiles.GetLength(0));
@@ -80,24 +165,13 @@ namespace Quoridor.AI {
                     graph.RemoveEdge(i + index.Item1, i + 1 + index.Item1);
                 }
             }
+        }
 
-            if (status.Self.Color == Color.Blue) {
-                goal = tiles.Length - tiles.GetLength(0);
-            } else if (status.Self.Color == Color.Red) {
-                goal = 0;
-            }
-
-            Player enemy = null;
-            if (status.Players[0] == status.Self) {
-                enemy = status.Players[1];
-            } else if (status.Players[1] == status.Self) {
-                enemy = status.Players[0];
-            }
-            int current1DEnemyPos = Get1DFrom2D(enemy.Position);
-            graph.RemoveEdge(current1DEnemyPos, current1DEnemyPos + 1);
-            graph.RemoveEdge(current1DEnemyPos, current1DEnemyPos - 1);
-            graph.RemoveEdge(current1DEnemyPos, current1DEnemyPos + tiles.GetLength(0));
-            graph.RemoveEdge(current1DEnemyPos, current1DEnemyPos - tiles.GetLength(1));
+        void RemoveEdge(int v) {
+            graph.RemoveEdge(v, v + 1);
+            graph.RemoveEdge(v, v - 1);
+            graph.RemoveEdge(v, v + tiles.GetLength(0));
+            graph.RemoveEdge(v, v - tiles.GetLength(1));
         }
 
         void ConvertToMove(Stack<int> path) {
@@ -105,93 +179,27 @@ namespace Quoridor.AI {
             nextCoordinates = Get2DFrom1D(index, tiles.GetLength(0), tiles.GetLength(1));
         }
 
-        private int Get1DFrom2D(Point p) {
-            int newIndex = p.Y * tiles.GetLength(0) + p.X;
-            return newIndex;
-        }
-
         private Tuple<int, int> Get2DFrom1D(int index, int xDim, int yDim) {
-            int i = 0, j = 0;
-            int row = xDim;
-            int col = yDim;
-            i = index / row;
-            j = index % col; //row?
+            int i = 0;
+            int j = 0;
+            i = index / xDim;
+            j = index % yDim; 
             Tuple<int, int> newIndex = new Tuple<int, int>(i, j);
             return newIndex;
         }
 
-        private void FindPath(Point pos) {
-            int i = FindLowestWeight();
-            if (!WallBetween(data.Self.Position, new Point(data.Self.Position.X, data.Self.Position.Y + optimalDirection)) && IsWithinGameBoard(data.Self.Position.X, data.Self.Position.Y + optimalDirection)) {
-                paths.Add(new List<Node> { new Node(distanceFromStart, goalPosition - data.Self.Position.Y, data.Self.Position) });
-                paths[i].Add(new Node(distanceFromStart, goalPosition - data.Self.Position.Y, data.Self.Position));
-            } else if (!WallBetween(data.Self.Position, new Point(data.Self.Position.X + 1, data.Self.Position.Y)) && IsWithinGameBoard(data.Self.Position.X + 1, data.Self.Position.Y)) {
-
-            } else if (!WallBetween(data.Self.Position, new Point(data.Self.Position.X - 1, data.Self.Position.Y)) && IsWithinGameBoard(data.Self.Position.X - 1, data.Self.Position.Y)) {
-
-            } else if (!WallBetween(data.Self.Position, new Point(data.Self.Position.X, data.Self.Position.Y - optimalDirection)) && IsWithinGameBoard(data.Self.Position.X, data.Self.Position.Y - optimalDirection)) {
-
-            } else {
-                Console.WriteLine("Something dun goofd");
-            }
-            return;
-        }
-        private int FindLowestWeight() {
-            int i = 0;
-            foreach (List<Node> path in paths) {
-                foreach (Node node in path) {
-                    foreach (List<Node> nextPath in paths) {
-                        foreach (Node nextNode in nextPath) {
-                            if (node.weight < nextNode.weight) {
-                                i = paths.IndexOf(path);
-                            }
-                        }
-                    }
-                }
-            }
-            return i;
-        }
-
-        private bool WallBetween(Point start, Point end) {
-            if (start.X == end.X) {
-                int num = Math.Min(start.Y, end.Y);
-                return data.HorizontalWall[start.X, num];
-            }
-            if (start.Y == end.Y) {
-                int num2 = Math.Min(start.X, end.X);
-                return data.VerticalWall[num2, start.Y];
-            }
-            return true;
-        }
-
-        protected bool IsWithinGameBoard(int column, int row) {
-            if (0 <= column && column < data.Tiles.GetLength(0) && 0 <= row) {
-                return row < data.Tiles.GetLength(1);
-            }
-            return false;
-        }
-
-        private void GetGoal(GameData status) {
-            if (status.Self.Position.Y == 0) {
-                goalPosition = status.Tiles.GetLength(1);
-                optimalDirection = 1;
-            } else if (status.Self.Position.Y == status.Tiles.GetLength(1)) {
-                goalPosition = 0;
-                optimalDirection = -1;
-            }
-        }
-
-        void Search(Graph g, int src) {
-            BellmanFordSP pathSearch = new BellmanFordSP(graph, src);
-            Stack<int>[] paths;
+        Stack<int> Search(Graph g, int src) {
+            BreadthFirstPaths pathSearch = new BreadthFirstPaths(graph, src);
+            Stack<int>[] paths = null;
             Stack<int> pathToChoose = null;
+
             paths = new Stack<int>[tiles.GetLength(0)];
             for (int i = 0; i < tiles.GetLength(0); i++) {
                 paths[i] = new Stack<int>();
                 paths[i] = pathSearch.PathTo(goal + i);
             }
             for (int j = 0; j < paths.Length; j++) {
-                if (j >= 0 && pathToChoose == null) {
+                if (pathToChoose == null) {
                     pathToChoose = paths[j];
                 }
                 if (paths[j] != null) {
@@ -200,11 +208,7 @@ namespace Quoridor.AI {
                     }
                 }
             }
-            if (pathToChoose != null) {
-                ConvertToMove(pathToChoose);
-            } else {
-                Stall();
-            }
+            return pathToChoose;
         }
 
         void Stall() {

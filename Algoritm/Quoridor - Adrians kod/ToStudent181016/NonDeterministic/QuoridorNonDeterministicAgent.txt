@@ -1,7 +1,3 @@
 starting ...
-Status Connected          27048673817
-Data  GameReadyToStart    27048676917
-Data  NewTurn             27048676926
-Data  PlayerMove          27048677016
-Data  NewTurn             27048677016
-Status Disconnected       27048710943
+Status Connected          27461661360
+CloseLog

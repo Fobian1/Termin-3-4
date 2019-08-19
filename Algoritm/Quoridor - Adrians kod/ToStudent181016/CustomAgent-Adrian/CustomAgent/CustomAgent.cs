@@ -176,7 +176,7 @@ namespace Quoridor.AI {
 
         void Search(Graph g, int src) {
             SearchAlgorithm pathSearch = new SearchAlgorithm(graph, src);
-            Stack<int>[] paths;
+            Stack<int>[] paths = null;
             Stack<int> pathToChoose = null;
             paths = new Stack<int>[tiles.GetLength(0)];
             for (int i = 0; i < tiles.GetLength(0); i++) {
