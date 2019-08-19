@@ -66,7 +66,6 @@ namespace Quoridor.AI {
                         ConvertToMove(enemyPath);
                         wallX = nextCoordinates.Item2;
                         wallY = nextCoordinates.Item1;
-
                         while (placingWall) {
                             if (enemyPos.Y == nextCoordinates.Item1) { //fienden ska rör sig i X-riktning
                                 isVertical = true;
@@ -82,7 +81,7 @@ namespace Quoridor.AI {
                             } else { //fienden ska röra sig i Y riktning
                                 isVertical = false;
                                 if (LegalWall(status)) {
-                                    Console.WriteLine("Next wall is on (" + wallX + ", " + wallY + "). The wall is: Horizontal");
+                                    //Console.WriteLine("Next wall is on (" + wallX + ", " + wallY + "). The wall is: Horizontal");
                                     placeWall = new PlaceWallAction(wallX, wallY, WallOrientation.Horizontal);
                                     return placeWall;
                                 }
@@ -99,18 +98,27 @@ namespace Quoridor.AI {
             }
 
             move = new MoveAction(nextCoordinates.Item2, nextCoordinates.Item1);
-            //Console.WriteLine("Next move is to " + nextCoordinates.Item2.ToString() + ", " +
-            //nextCoordinates.Item1.ToString() + " tile " + Get1DFrom2D(new Point(nextCoordinates.Item2, nextCoordinates.Item1)));
             return move;
         }
 
         private bool LegalWall(GameData status) {
+            int wall1DPos = wallY * tiles.GetLength(0) + wallX;
             nextPlayer1DPos = enemy.Position.Y * tiles.GetLength(0) + enemy.Position.X;
+            if (!(wallX >= 0 && (wallX + 1) < xDim)) { //wallX når utanför spelplanen
+                wallX--;
+                return false;
+            }
+            if (!(wallY >= 0 && (wallY + 1) < yDim)) { //wallY når utanför spelplanen
+                wallY--;
+                return false;
+            }
+            Console.WriteLine("What is nextPlayer1DPos? " +  nextPlayer1DPos);
+            Console.WriteLine("What is wall1DPos? " + wall1DPos);
             //if (wallX >= 0 && (wallX + 1) <= tiles.GetLength(0) - 1 && wallY >= 0 && (wallY + 1) <= tiles.GetLength(1) - 1) { // nya muren kommer vara inanför spelet
             if (isVertical) { //Den ska vara vertikal
                 for (int i = (wallY - 1); i <= (wallY + 1); i++) {
                     Console.WriteLine("Place wall on [" + wallX + ", " + i + "]");
-                    if (i >= 0 && i <= tiles.GetLength(1)) {
+                    if (i >= 0 && i + 1 <= tiles.GetLength(1) && wallX < 8) {
                         if (status.VerticalWall[wallX, i]) {
                             wallY--; //Den krockar med en vertical mur
                             return false;
@@ -124,8 +132,7 @@ namespace Quoridor.AI {
                     }
                 }
                 CreateGraph(status, enemy);
-                graph.RemoveEdge(wallX, wallY);
-                graph.RemoveEdge(wallX, wallY + 1);
+                graph.RemoveEdge(wall1DPos + wallY, wall1DPos + 1 + wallY);
                 enemyPath = Search(graph, nextPlayer1DPos);
                 if (enemyPath != null) {
                     return true;
@@ -135,17 +142,12 @@ namespace Quoridor.AI {
                 }
             } else {
                 for (int i = (wallX - 1); i <= (wallX + 1); i++) {
-                    Console.WriteLine("i = " + i);
-                    if (i >= 0 && i <= xDim) {
-                        Console.WriteLine("Place wall on ["+i+", "+wallY+"]");
+                    if (i >= 0 && i + 1 < xDim) {
                         if (status.HorizontalWall[i, wallY]) {
-                            
                             wallX--; //Den krockar med en horizontel mur
-                            Console.WriteLine("New wallX: " + wallX);
                             return false;
                         }
                     }
-
                 }
                 if (wallY > 0 && wallX > 0) {
                     if (status.VerticalWall[wallX - 1, wallY - 1]) {
@@ -154,8 +156,7 @@ namespace Quoridor.AI {
                     }
                 }
                 CreateGraph(status, enemy);
-                graph.RemoveEdge(wallX, wallY);
-                graph.RemoveEdge(wallX + 1, wallY);
+                graph.RemoveEdge(wall1DPos, wall1DPos + xDim);
                 enemyPath = Search(graph, nextPlayer1DPos);
                 if (enemyPath != null) {
                     return true;
@@ -164,15 +165,13 @@ namespace Quoridor.AI {
                     return false;
                 }
             }
-            
         }
 
         void CreateGraph(GameData status, Player nextPlayer) {
             graph = new Graph(tiles.Length, tiles);
 
             for (int i = 0; i < status.HorizontalWall.Length; i++) {
-                Tuple<int, int> index = Get2DFrom1D(i, status.Tiles.GetLength(1),
-                    status.Tiles.GetLength(0));
+                Tuple<int, int> index = Get2DFrom1D(i, status.Tiles.GetLength(1),status.Tiles.GetLength(0));
 
                 if (status.HorizontalWall[index.Item2, index.Item1]) {
                     graph.RemoveEdge(i, i + tiles.GetLength(0));
@@ -208,7 +207,7 @@ namespace Quoridor.AI {
             return newIndex;
         }
 
-        Stack<int> Search(Graph g, int src) {
+        Stack<int> Search(Graph graph, int src) {
             BreadthFirstPaths pathSearch = new BreadthFirstPaths(graph, src);
             Stack<int>[] paths = null;
             Stack<int> pathToChoose = null;
