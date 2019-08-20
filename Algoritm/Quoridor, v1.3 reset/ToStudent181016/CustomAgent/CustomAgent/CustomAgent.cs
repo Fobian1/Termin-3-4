@@ -9,7 +9,7 @@ namespace Quoridor.AI {
         Graph graph;
         Tile[,] tiles;
         Tuple<int, int> nextCoordinates = null;
-        int current1DPos, nextPlayer1DPos, goal, playerWalls, enemyWalls, wallX, wallY, playerGoal, enemyGoal, xDim, yDim;
+        int current1DPos, nextPlayer1DPos, goal, playerWalls, enemyWalls, wallX, wallY, yOff, playerGoal, enemyGoal, xDim, yDim;
         Action move, placeWall;
         Stack<int> playerPath, enemyPath;
         Point enemyPos;
@@ -31,23 +31,16 @@ namespace Quoridor.AI {
                 enemy = status.Players[1];
                 playerGoal = 0;
                 enemyGoal = tiles.Length - xDim;
+                yOff = 1;
             } else {
                 enemy = status.Players[0];
                 playerGoal = tiles.Length - xDim;
                 enemyGoal = 0;
+                yOff = 0;
             }
 
             foreach (Player currentPlayer in status.Players) { //Får info om spelarna
                 current1DPos = currentPlayer.Position.Y * tiles.GetLength(0) + currentPlayer.Position.X;
-                
-                //if (currentPlayer.Color == Color.Blue) {
-                //    goal = tiles.Length - xDim;
-                //    yOff = 0;
-                //}
-                //else {
-                //    goal = 0;
-                //    yOff = -1;
-                //}
 
                 if (currentPlayer == player) { //Spelaren
                     nextPlayer1DPos = enemy.Position.Y * tiles.GetLength(0) + enemy.Position.X;
@@ -85,7 +78,7 @@ namespace Quoridor.AI {
                             } else { //fienden ska röra sig i Y riktning
                                 isVertical = false;
                                 if (LegalWall(status)) {
-                                    //Console.WriteLine("Next wall is on (" + wallX + ", " + wallY + "). The wall is: Horizontal");
+                                    Console.WriteLine("Next wall is on (" + wallX + ", " + wallY + "). The wall is: Horizontal");
                                     placeWall = new PlaceWallAction(wallX, wallY, WallOrientation.Horizontal);
                                     return placeWall;
                                 }
@@ -100,7 +93,7 @@ namespace Quoridor.AI {
             } else {
                 Stall();
             }
-
+            Console.WriteLine("Move to: (" + nextCoordinates.Item2 + ", " + nextCoordinates.Item1 + ")");
             move = new MoveAction(nextCoordinates.Item2, nextCoordinates.Item1);
             return move;
         }
@@ -116,8 +109,7 @@ namespace Quoridor.AI {
                 wallY--;
                 return false;
             }
-            
-            //if (wallX >= 0 && (wallX + 1) <= tiles.GetLength(0) - 1 && wallY >= 0 && (wallY + 1) <= tiles.GetLength(1) - 1) { // nya muren kommer vara inanför spelet
+
             if (isVertical) { //Den ska vara vertikal
                 for (int i = (wallY - 1); i <= (wallY + 1); i++) {
                     Console.WriteLine("Place wall on [" + wallX + ", " + i + "]");
@@ -136,6 +128,7 @@ namespace Quoridor.AI {
                 }
                 CreateGraph(status, enemy);
                 graph.RemoveEdge(wall1DPos + wallY, wall1DPos + 1 + wallY);
+                graph.RemoveEdge(wall1DPos + wallY + 1, wall1DPos + 2 + wallY);
                 enemyPath = Search(graph, nextPlayer1DPos, enemyGoal);
                 if (enemyPath != null) {
                     return true;
@@ -159,7 +152,6 @@ namespace Quoridor.AI {
                     }
                 }
                 CreateGraph(status, enemy);
-                Console.WriteLine("What is wall1DPos? " + wall1DPos);
                 graph.RemoveEdge(wall1DPos, wall1DPos + xDim);
                 graph.RemoveEdge(wall1DPos + 1, wall1DPos + 1 + xDim);
                 enemyPath = Search(graph, nextPlayer1DPos, enemyGoal);
