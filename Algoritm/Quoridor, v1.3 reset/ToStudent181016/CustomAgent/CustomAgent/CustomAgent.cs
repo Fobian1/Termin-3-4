@@ -9,7 +9,7 @@ namespace Quoridor.AI {
         Graph graph;
         Tile[,] tiles;
         Tuple<int, int> nextCoordinates = null;
-        int current1DPos, nextPlayer1DPos, goal, playerWalls, enemyWalls, wallX, wallY, yOff, xDim, yDim;
+        int current1DPos, nextPlayer1DPos, goal, playerWalls, enemyWalls, wallX, wallY, playerGoal, enemyGoal, xDim, yDim;
         Action move, placeWall;
         Stack<int> playerPath, enemyPath;
         Point enemyPos;
@@ -29,34 +29,38 @@ namespace Quoridor.AI {
 
             if (status.Players[0] == player) {
                 enemy = status.Players[1];
+                playerGoal = 0;
+                enemyGoal = tiles.Length - xDim;
             } else {
                 enemy = status.Players[0];
+                playerGoal = tiles.Length - xDim;
+                enemyGoal = 0;
             }
 
             foreach (Player currentPlayer in status.Players) { //Får info om spelarna
                 current1DPos = currentPlayer.Position.Y * tiles.GetLength(0) + currentPlayer.Position.X;
                 
-                if (currentPlayer.Color == Color.Blue) {
-                    goal = tiles.Length - xDim;
-                    yOff = 0;
-                }
-                else {
-                    goal = 0;
-                    yOff = -1;
-                }
+                //if (currentPlayer.Color == Color.Blue) {
+                //    goal = tiles.Length - xDim;
+                //    yOff = 0;
+                //}
+                //else {
+                //    goal = 0;
+                //    yOff = -1;
+                //}
 
                 if (currentPlayer == player) { //Spelaren
                     nextPlayer1DPos = enemy.Position.Y * tiles.GetLength(0) + enemy.Position.X;
                     CreateGraph(status, enemy);
                     RemoveEdge(nextPlayer1DPos);
                     playerWalls = currentPlayer.NumberOfWalls;
-                    playerPath = Search(graph, current1DPos);
+                    playerPath = Search(graph, current1DPos, playerGoal);
                 }
                 else { //Motståndaren
                     CreateGraph(status, player);
                     enemyPos = currentPlayer.Position;
                     enemyWalls = currentPlayer.NumberOfWalls;
-                    enemyPath = Search(graph, current1DPos);
+                    enemyPath = Search(graph, current1DPos, enemyGoal);
                 }
             }
             if(playerPath != null) {
@@ -112,8 +116,7 @@ namespace Quoridor.AI {
                 wallY--;
                 return false;
             }
-            Console.WriteLine("What is nextPlayer1DPos? " +  nextPlayer1DPos);
-            Console.WriteLine("What is wall1DPos? " + wall1DPos);
+            
             //if (wallX >= 0 && (wallX + 1) <= tiles.GetLength(0) - 1 && wallY >= 0 && (wallY + 1) <= tiles.GetLength(1) - 1) { // nya muren kommer vara inanför spelet
             if (isVertical) { //Den ska vara vertikal
                 for (int i = (wallY - 1); i <= (wallY + 1); i++) {
@@ -133,7 +136,7 @@ namespace Quoridor.AI {
                 }
                 CreateGraph(status, enemy);
                 graph.RemoveEdge(wall1DPos + wallY, wall1DPos + 1 + wallY);
-                enemyPath = Search(graph, nextPlayer1DPos);
+                enemyPath = Search(graph, nextPlayer1DPos, enemyGoal);
                 if (enemyPath != null) {
                     return true;
                 } else {
@@ -156,8 +159,10 @@ namespace Quoridor.AI {
                     }
                 }
                 CreateGraph(status, enemy);
+                Console.WriteLine("What is wall1DPos? " + wall1DPos);
                 graph.RemoveEdge(wall1DPos, wall1DPos + xDim);
-                enemyPath = Search(graph, nextPlayer1DPos);
+                graph.RemoveEdge(wall1DPos + 1, wall1DPos + 1 + xDim);
+                enemyPath = Search(graph, nextPlayer1DPos, enemyGoal);
                 if (enemyPath != null) {
                     return true;
                 } else {
@@ -207,7 +212,7 @@ namespace Quoridor.AI {
             return newIndex;
         }
 
-        Stack<int> Search(Graph graph, int src) {
+        Stack<int> Search(Graph graph, int src, int goal) {
             BreadthFirstPaths pathSearch = new BreadthFirstPaths(graph, src);
             Stack<int>[] paths = null;
             Stack<int> pathToChoose = null;
